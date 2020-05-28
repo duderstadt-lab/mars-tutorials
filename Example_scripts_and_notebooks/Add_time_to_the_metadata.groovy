@@ -1,3 +1,6 @@
+//Adds a time column to the Metadata by converting the slice number together
+//with a time/slice input to a time measurement in seconds.
+
 #@ MoleculeArchive archive
 #@ double timePerSlice
 
@@ -7,9 +10,9 @@ import org.scijava.table.*
 
 archive.lock()
 
-//Retrieves the first image metadata item, can instead use metaUID if needed
-MarsImageMetadata metaData = archive.getImageMetadata(0)
-MarsTable metaDataTable = metaData.getDataTable()
+//Retrieves the first image metadata item
+MarsMetadata metadata = archive.getMetadata(0)
+MarsTable metaDataTable = metadata.getDataTable()
 
 DoubleColumn timeCol = new DoubleColumn("Time (s)")
 
@@ -24,6 +27,6 @@ while (metaDataTable.hasColumn("Time (s)")) {
 
 metaDataTable.add(timeCol)
 
-archive.putImageMetadata(metaData)
+archive.putMetadata(metadata)
 
 archive.unlock()

@@ -8,7 +8,7 @@ import org.scijava.table.*
 
 archive.lock()
 
-MarsTable metaTable = archive.getImageMetadata(0).getDataTable()
+MarsTable metaTable = archive.getMetadata(0).getDataTable()
 
 sliceToFlowrate = [:]
 
