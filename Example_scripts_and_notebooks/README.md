@@ -11,14 +11,14 @@ Groovy script to make a MarsTable showing the value for the specified parameter 
 Script to show the tracking results in the MoleculeArchive as color coded ROIs on the original video. Also possible to show the overlay for tagged molecules only.
 
 
-### Example Scripts for GUI Functions
+### Example Scripts 
 1. Add Molecule Table to Archive
 2. Create a MarsTable
 3. Create a MoleculeArchive
 4. Get Molecule DataTable
 5. Add Time to the Metadata
 6. Add Flowrates to Metadata
-7. Add Flowrates from Metadata to Molecule Records 
+7. Add Flowrates from Metadata to Molecule Records
 8. Convert from Pixels to Length
 9. Filter Molecules by Parameter Values
 10. Calculate the Slope between Start and End
