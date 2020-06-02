@@ -2,7 +2,7 @@
 //with a time/slice input to a time measurement in seconds.
 
 #@ MoleculeArchive archive
-#@ double timePerSlice
+#@ double timePerFrame
 
 import de.mpg.biochem.mars.molecule.*
 import de.mpg.biochem.mars.table.*
@@ -17,8 +17,8 @@ MarsTable metaDataTable = metadata.getDataTable()
 DoubleColumn timeCol = new DoubleColumn("Time (s)")
 
 for (int row=0; row<metaDataTable.getRowCount(); row++) {
-   int slice = metaDataTable.getValue("slice", row);
-   timeCol.add((slice-1)*timePerSlice)
+   int slice = metaDataTable.getValue("T", row);
+   timeCol.add((slice-1)*timePerFrame)
 }
 
 while (metaDataTable.hasColumn("Time (s)")) {

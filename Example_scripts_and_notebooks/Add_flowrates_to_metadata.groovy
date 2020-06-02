@@ -13,7 +13,7 @@ import java.util.HashMap;
 sliceToFlowMap = [:]
 
 for (int row=0;row<sliceToFlowTable.getRowCount();row++)
-   sliceToFlowMap.put(sliceToFlowTable.getValue("slice", row), sliceToFlowTable.getValue("flowrate", row))
+   sliceToFlowMap.put(sliceToFlowTable.getValue("T", row), sliceToFlowTable.getValue("flowrate", row))
 newColumn = "Flowrate (ul/min)"
 
 MarsMetadata metaData = archive.getMetadata(0)
@@ -23,8 +23,8 @@ if (!metaTable.hasColumn(newColumn))
   metaTable.appendColumn(newColumn)
 
 for (int row=0;row<metaTable.getRowCount();row++) {
-  if (sliceToFlowMap.containsKey(metaTable.getValue("slice", row)))
-      metaTable.setValue(newColumn, row, sliceToFlowMap.get(metaTable.getValue("slice", row)))
+  if (sliceToFlowMap.containsKey(metaTable.getValue("T", row)))
+      metaTable.setValue(newColumn, row, sliceToFlowMap.get(metaTable.getValue("T", row)))
 }
 
 archive.putMetadata(metaData)
@@ -36,7 +36,7 @@ import de.mpg.biochem.mars.table.*;
 
 //Initialize a new ResultsTable with 2 columns and no rows
 table = new MarsTable(2,0)
-table.setColumnHeader(0, "slice")
+table.setColumnHeader(0, "T")
 table.setColumnHeader(1, "flowrate")
 
 
@@ -45,7 +45,7 @@ for (int row=0;row<150;row++) {
    //We have to increase the table size by one row
    //before we can add more values
    table.appendRow()
-   table.setValue("slice", row, row)
+   table.setValue("T", row, row)
    table.setValue("flowrate", row, row*0.25)
 
 }
