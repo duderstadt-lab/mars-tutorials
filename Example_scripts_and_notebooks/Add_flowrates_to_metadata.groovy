@@ -1,33 +1,28 @@
 //Adds a flowrate (ul/min) column to the metadata record.
 
-#@ MarsTable sliceToFlowTable
+#@ MarsTable tToFlowTable
 #@ MoleculeArchive archive
-#@ String metaUID
 
+import de.mpg.biochem.mars.metadata.*
 import de.mpg.biochem.mars.molecule.*
 import de.mpg.biochem.mars.table.*
 import org.scijava.table.*
 import java.util.HashMap;
 
 //First lets build a map from slice to flowrate
-sliceToFlowMap = [:]
+tToFlowMap = [:]
 
-for (int row=0;row<sliceToFlowTable.getRowCount();row++)
-   sliceToFlowMap.put(sliceToFlowTable.getValue("T", row), sliceToFlowTable.getValue("flowrate", row))
-newColumn = "Flowrate (ul/min)"
+for (int row=0;row<tToFlowTable.getRowCount();row++)
+   tToFlowMap.put((int) tToFlowTable.getValue("T", row), tToFlowTable.getValue("flowrate", row))
 
-MarsMetadata metaData = archive.getMetadata(0)
-MarsTable metaTable = metaData.getDataTable()
+MarsMetadata metadata = archive.getMetadata(0)
 
-if (!metaTable.hasColumn(newColumn))
-  metaTable.appendColumn(newColumn)
+for (int indexT=0; indexT<metadata.getImage(0).getSizeT(); indexT++)
+     metadata.getImage(0).getPlane(0, 0, indexT).setField("Flowrate (ul/min)", tToFlowMap.get(indexT))
 
-for (int row=0;row<metaTable.getRowCount();row++) {
-  if (sliceToFlowMap.containsKey(metaTable.getValue("T", row)))
-      metaTable.setValue(newColumn, row, sliceToFlowMap.get(metaTable.getValue("T", row)))
-}
 
-archive.putMetadata(metaData)
+archive.putMetadata(metadata)
+
 
 //This requires the input of a MarsTable with flow rates. A dummy example is created with this script.
 #@output MarsTable table

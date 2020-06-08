@@ -15,22 +15,22 @@ import java.util.Random;
 Overlay overlay = new Overlay();
 Random ran = new Random();
 
-archive.getMoleculeUIDs().stream().forEach({ UID ->
+archive.molecules().forEach{ molecule ->
    Color color = new Color(ran.nextFloat(), ran.nextFloat(), ran.nextFloat())
-   table = archive.get(UID).getDataTable()
+   MarsTable table = molecule.getDataTable()
    for (int i=0; i< table.getRowCount() ; i++ ) {
       PointRoi peakRoi = new PointRoi(table.getValue("x", i) + 0.5, table.getValue("y", i) + 0.5)
       //Have to select Use Names as Labels in Image>Overlay>Labels...
-      peakRoi.setName(UID.substring(0, 5))
+      peakRoi.setName(molecule.getUID().substring(0, 5))
       peakRoi.setStrokeColor(color)
       //0-4 as options...
       peakRoi.setSize(4)
       //(0=hybrid, 1=crosshair, 2=dot, 3=circle)
       peakRoi.setPointType(2)
-      peakRoi.setPosition((int)table.getValue("slice", i))
+      peakRoi.setPosition((int) molecule.getParameter("Channel") + 1, 0, (int) table.getValue("T", i) + 1)
       overlay.add(peakRoi)
       }
-});
+}
 image.setOverlay(overlay);
 
 //To show traces specifically per tag use the following script
