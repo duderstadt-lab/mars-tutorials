@@ -1,3 +1,5 @@
+//Generate a table with all values of a specified parameter 
+
 #@ MoleculeArchive archive
 #@ String parameterName
 #@output MarsTable parameterTable

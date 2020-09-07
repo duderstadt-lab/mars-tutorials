@@ -1,4 +1,5 @@
-//Get number of molecules with tags
+//Get number of molecules with tags printed in the script window
+
 #@ LogService logService
 #@ MoleculeArchive archive
 #@ String(label="Tags (comma separated list)") Tags

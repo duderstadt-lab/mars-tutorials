@@ -1,4 +1,4 @@
-// This script retrieves the molecule DataTable
+// This script retrieves the molecule DataTable for a specified UUID
 
 #@ MoleculeArchive archive
 #@ String UID

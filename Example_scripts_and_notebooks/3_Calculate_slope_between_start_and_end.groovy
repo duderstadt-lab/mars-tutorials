@@ -1,5 +1,6 @@
 //Calculate the slope between the start and end of a trace
 //Allows to set for start and end, x and y, and tag information
+//Generates an output table and adds the calculated slope as molecule parameter
 
 #@ MoleculeArchive archive
 #@ String slopeColumn
@@ -17,7 +18,6 @@ import org.scijava.table.*
 tableOUT = new MarsTable()
 DoubleColumn col1 = new DoubleColumn("slope")
 
-//Have to use this type for String columns...
 GenericColumn col2 = new GenericColumn("UID")
 
 tableOUT.add(col1)
@@ -25,7 +25,6 @@ tableOUT.add(col2)
 
 archive.lock()
 
-//Since you are working with the global table can't use parallelStream...FYI
 archive.getMoleculeUIDs().stream().filter({UID -> archive.get(UID).hasTag(filterTag)}).forEach({ UID ->
       Molecule molecule = archive.get(UID)
       MarsTable table = molecule.getDataTable()

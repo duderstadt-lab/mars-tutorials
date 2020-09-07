@@ -1,4 +1,4 @@
-//Converts the units from pixels into actual length
+//Converts the units from pixels into actual length (f.e. base pairs)
 
 #@ MoleculeArchive archive
 
@@ -6,7 +6,7 @@ import de.mpg.biochem.mars.molecule.*
 import de.mpg.biochem.mars.table.*
 import org.scijava.table.*
 
-double converter = 500
+double converter = 500 //set here how many pixels correspond to how many base pairs
 String fromColumn = "y"
 String toColumn = "bps"
 
