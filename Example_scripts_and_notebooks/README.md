@@ -1,4 +1,4 @@
-This examples database contains examples that are briefly discussed in the [mars docs]() as well as some example scripts for functions also accessible through the user interfaces.
+This examples database contains examples that are briefly discussed in the [mars docs](https://duderstadt-lab.github.io/mars-docs/) as well as some example scripts for functions also accessible through the user interfaces.
 
 ### Discussed Example Scripts
 [1. Plot the Kinetic Change Point Rates with Python](https://github.com/duderstadt-lab/mars-tutorials/blob/master/Example_scripts_and_notebooks/KCP_widget_and_jupyter_plot.ipynb)  
