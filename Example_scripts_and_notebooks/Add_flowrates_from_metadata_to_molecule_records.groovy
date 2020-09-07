@@ -17,7 +17,7 @@ archive.molecules().forEach{ molecule ->
     table.appendColumn("Flowrate (ul/min)")
 
   for (int row=0;row<table.getRowCount();row++){
-    table.set("Flowrate (ul/min)", row,metadata.getImage(0).getPlane(0, 0, row).getField("Flowrate (ul/min)") )
+    table.set("Flowrate (ul/min)", row,metadata.getImage(0).getPlane(0, 0, T).getField("Flowrate (ul/min)") )
 }}
 ---
 // Add flowrates from a T,flowrate table to individual molecule records
