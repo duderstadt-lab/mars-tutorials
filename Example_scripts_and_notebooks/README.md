@@ -24,3 +24,4 @@ Script to show the tracking results in the MoleculeArchive as color coded ROIs o
 10. Calculate the Slope between Start and End
 11. Get Number of Molecules with Tags
 12. Get the Intensity for the First Frame for all Molecules
+13. Color Coded Track Overlay for Tagged Molecules 

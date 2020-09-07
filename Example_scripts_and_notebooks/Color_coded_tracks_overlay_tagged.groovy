@@ -1,8 +1,10 @@
 //Uses the generated MoleculeArchive peak tracker information and displays ROI circles for all tracked traces per slice.
 //This enables the user to check the tracking results.
 // Use Image>Overlay>Labels to show the UID numbering on the Image
+//To show traces specifically per tag use the following script
 #@ ImagePlus image
 #@ MoleculeArchive archive
+#@ String(label="Tags (comma separated list)") Tags
 
 import de.mpg.biochem.mars.molecule.*;
 import de.mpg.biochem.mars.table.*;
@@ -11,10 +13,31 @@ import ij.gui.PointRoi;
 import ij.gui.Overlay;
 import java.util.Random;
 
-Overlay overlay = new Overlay();
-Random ran = new Random();
+String[] tagList = Tags.split(",")
 
-archive.getMoleculeUIDs().stream().forEach({ UID ->
+for (int i=0; i<tagList.length; i++) {
+   tagList[i] = tagList[i].trim();
+}
+
+ArrayList<String> moleculesWithTags = (ArrayList<String>)archive.getMoleculeUIDs().stream().filter{UID ->
+                    int tagCount = 0
+                    for (int i=0; i<tagList.length; i++) {
+                            for (String tag : archive.get(UID).getTags()) {
+                               if (tagList[i].equals(tag)) {
+                                  tagCount++;
+                               }
+                            }
+                         }
+                    if (tagCount == tagList.length)
+                                             return true;
+                                        else
+                                             return false;
+                    }.collect()
+
+Overlay overlay = new Overlay()
+Random ran = new Random()
+
+moleculesWithTags.stream().forEach{ UID ->
    Color color = new Color(ran.nextFloat(), ran.nextFloat(), ran.nextFloat())
    table = archive.get(UID).getDataTable()
    for (int i=0; i< table.getRowCount() ; i++ ) {
@@ -29,5 +52,5 @@ archive.getMoleculeUIDs().stream().forEach({ UID ->
       peakRoi.setPosition((int)table.getValue("T", i)+1)
       overlay.add(peakRoi)
       }
-});
+}
 image.setOverlay(overlay)
