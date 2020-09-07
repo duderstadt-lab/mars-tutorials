@@ -1,7 +1,6 @@
 //Uses the generated MoleculeArchive peak tracker information and displays ROI circles for all tracked traces per slice.
 //This enables the user to check the tracking results.
 // Use Image>Overlay>Labels to show the UID numbering on the Image
-
 #@ ImagePlus image
 #@ MoleculeArchive archive
 
@@ -15,23 +14,25 @@ import java.util.Random;
 Overlay overlay = new Overlay();
 Random ran = new Random();
 
-archive.molecules().forEach{ molecule ->
+archive.getMoleculeUIDs().stream().forEach({ UID ->
    Color color = new Color(ran.nextFloat(), ran.nextFloat(), ran.nextFloat())
-   MarsTable table = molecule.getDataTable()
+   table = archive.get(UID).getDataTable()
    for (int i=0; i< table.getRowCount() ; i++ ) {
       PointRoi peakRoi = new PointRoi(table.getValue("x", i) + 0.5, table.getValue("y", i) + 0.5)
       //Have to select Use Names as Labels in Image>Overlay>Labels...
-      peakRoi.setName(molecule.getUID().substring(0, 5))
+      peakRoi.setName(UID.substring(0, 5))
       peakRoi.setStrokeColor(color)
       //0-4 as options...
       peakRoi.setSize(4)
       //(0=hybrid, 1=crosshair, 2=dot, 3=circle)
       peakRoi.setPointType(2)
-      peakRoi.setPosition((int) molecule.getParameter("Channel") + 1, 0, (int) table.getValue("T", i) + 1)
+      peakRoi.setPosition((int)table.getValue("T", i)+1)
       overlay.add(peakRoi)
       }
-}
-image.setOverlay(overlay);
+});
+image.setOverlay(overlay)
+
+
 
 //To show traces specifically per tag use the following script
 #@ ImagePlus image
@@ -81,7 +82,7 @@ moleculesWithTags.stream().forEach{ UID ->
       peakRoi.setSize(4)
       //(0=hybrid, 1=crosshair, 2=dot, 3=circle)
       peakRoi.setPointType(2)
-      peakRoi.setPosition((int)table.getValue("slice", i))
+      peakRoi.setPosition((int)table.getValue("T", i)+1)
       overlay.add(peakRoi)
       }
 }
