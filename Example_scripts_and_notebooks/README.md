@@ -12,8 +12,8 @@ Script to show the tracking results in the MoleculeArchive as color coded ROIs o
 
 
 ### Example Scripts
-1. Add flowrates from the metadata to molecule records
-2. Add flowrates from a table to the metadata
+1. Add flowrates from a table to the metadata
+2. Add flowrates from the metadata to molecule records
 3. Calculate the slope between the start and the end of a trace
 4. Create color coded track overlays for all molecules
 5. Create color coded track overlays for tagged molecules
@@ -24,4 +24,4 @@ Script to show the tracking results in the MoleculeArchive as color coded ROIs o
 10. Get a molecule DataTable for a specified UUID
 11. Get the intensity for the first time point of all molecules
 12. Get the number of molecules with a specified tag
-13. Kinetic Change Point results analysis in a Jupyter notebook 
+13. Kinetic Change Point results analysis in a Jupyter notebook
