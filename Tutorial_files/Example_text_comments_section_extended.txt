@@ -1,0 +1,57 @@
+## Dataset information
+For documentation look at [the documentation page](https://duderstadt-lab.github.io/mars-docs/docs/MarsRover/Comments/).
+
+**Table of contents:**
+[TOC]
+
+
+---
+### Parameter Definitions
+coil20
+: Measure of coiling at a flowrate of 20 ul/min. The difference between the peak of positive coiling - peak of negative coiling.
+
+coil2p5
+: Measure of coiling at a flowrate of 2.5 ul/min. The difference Positive coiling _Peak_ and _Background_.
+
+~~coil2p5neg~~
+: The difference between negative peaks and a flat region at 2.5 ul/min.[^footnote]
+
+### Tags
+
+|Tag number|Description|
+|:-----|:------|
+|Tag 1| Active|
+|Tag 2| Paused|
+|Tag 3| Inactive|
+
+
+## Processing Steps
+```mermaid
+graph TD
+    A(Peak Tracking) --> B
+    B(Region Difference Calculator<br>Coilability, Flow Reversals, Activity) --> P1[coil20, coil2p5, rev_begin_x,<br>rev_begin_y, rev_end_x,<br>rev_end_y, enzymatic]
+    A --> D
+    D(MSD Calculator<br> x, y) --> P2[x_MSD, yMSD]
+    D --> T2>stuckMSD]
+    A --> F(Linear Regression<br> Negative coiling)
+    P1 --> T1>stuckRev, coilable20,doubleCoiling,<br>shortTrajectory]
+    T1 --> T3>singleTether, chi]
+    F --> P3[Slope_Neg_20]
+    T2 --> I(Drift Calculator Command)
+    I --> J(Drift Corrector Command<br>x_drift_corr, y_drift_corr)
+    J --> K(Linear Regression<br>Negative and Positive<br>Coiling)
+    K --> P4[neg_coil_slope, pos_coil_slope]
+    P4 --> L(Conversion to cycles<br>poscycles and negcycles)
+    L --> M(Conversion to cycles<br>poscyclesG and negcyclesG<br>based on median coiling slopes)
+
+    style P1 fill:#ffb347,stroke:#ffb347,stroke-width:1px
+    style P2 fill:#ffb347,stroke:#ffb347,stroke-width:1px
+    style P3 fill:#ffb347,stroke:#ffb347,stroke-width:1px
+    style P4 fill:#ffb347,stroke:#ffb347,stroke-width:1px
+    style T1 fill:lightblue,stroke:lightblue,stroke-width:1px
+    style T2 fill:lightblue,stroke:lightblue,stroke-width:1px
+    style T3 fill:lightblue,stroke:lightblue,stroke-width:1px
+```
+
+
+[^footnote]: Parameter not relevant anymore for analysis. Crossed out.
