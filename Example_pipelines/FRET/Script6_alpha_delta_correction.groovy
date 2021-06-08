@@ -1,3 +1,37 @@
+/*******************************************************************************
+ * Copyright (C) 2021, Duderstadt Lab
+ * All rights reserved.
+ *
+ * Redistribution and use in source and binary forms, with or without
+ * modification, are permitted provided that the following conditions are met:
+ *
+ * 1. Redistributions of source code must retain the above copyright notice,
+ *    this list of conditions and the following disclaimer.
+ *
+ * 2. Redistributions in binary form must reproduce the above copyright notice,
+ *    this list of conditions and the following disclaimer in the documentation
+ *    and/or other materials provided with the distribution.
+ *
+ * THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"
+ * AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE
+ * IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE
+ * ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE
+ * LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+ * CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF
+ * SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS
+ * INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN
+ * CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)
+ * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
+ * POSSIBILITY OF SUCH DAMAGE.
+ ******************************************************************************/
+//written by: Nadia M. Huisjes, MSc. (Duderstadt lab)
+
+//This script accompanies the 'FRET dataset analysis using Mars' example pipeline as described on the mars docs.
+//https://duderstadt-lab.github.io/mars-docs/examples/FRET
+
+// Calculate the alpha and delta correction factors and apply the correction on E and S
+
+//import dependencies
 #@ MoleculeArchive archive
 
 import de.mpg.biochem.mars.molecule.*
@@ -8,7 +42,7 @@ import org.scijava.table.*
 def E_list = []
 def S_list = []
 
-//Calculate the corrected S and E values for the AO and DO populations respectively
+//calculate the corrected S and E values for the AO and DO populations respectively
 archive.getMoleculeUIDs().stream().forEach({UID ->
   def molecule = archive.get(UID)
   if (molecule.hasTag("AO_active")){
@@ -33,7 +67,7 @@ archive.getMoleculeUIDs().stream().forEach({UID ->
   	}
   })
 
-//Calculate the mean S and E values from the AO and DO populations and assign a parameter in the metadata
+//calculate the mean S and E values from the AO and DO populations and assign a parameter in the metadata
 double E_mean = E_list.stream().filter{item -> item != Double.NaN}.mapToDouble{item -> Double.valueOf(item)}.sum()/E_list.size()
 double S_mean =  S_list.stream().filter{item -> item != Double.NaN}.mapToDouble{item -> Double.valueOf(item)}.sum()/S_list.size()
 
@@ -43,7 +77,7 @@ archive.metadata().forEach{metadata ->
 }
 
 
-//Calculate alpha and delta and assign a parameter in the metadata
+//calculate alpha and delta and assign a parameter in the metadata
 double alpha = E_mean/(1- E_mean)
 double delta = S_mean/(1-S_mean)
 
@@ -52,7 +86,7 @@ archive.metadata().forEach{metadata ->
 	metadata.setParameter("delta", delta)
 }
 
-//Calculate FAD for each FRET molecule and the corrected E and S values
+//calculate FAD for each FRET molecule and the corrected E and S values
 archive.getMoleculeUIDs().stream().forEach({UID ->
   def molecule = archive.get(UID)
   if (molecule.hasTag("Active_single")){
