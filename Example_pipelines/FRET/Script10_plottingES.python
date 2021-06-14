@@ -1,0 +1,90 @@
+#@ MoleculeArchive archive
+#@OUTPUT String xlabel
+#@OUTPUT String ylabel
+#@OUTPUT String title
+#@OUTPUT Double xmin
+#@OUTPUT Double xmax
+#@OUTPUT Double ymin
+#@OUTPUT Double ymax
+
+# Set global outputs
+xlabel = "E"
+ylabel = "S"
+title = "FRET chart"
+
+xmin = -0.2
+xmax = 1.2
+ymin = -0.2
+ymax = 1.2
+
+# Series 1 Outputs
+#@OUTPUT Double[] series1_xvalues
+#@OUTPUT Double[] series1_yvalues
+#@OUTPUT Double[] series1_size
+#@OUTPUT String[] series1_label
+#@OUTPUT String[] series1_color
+#@OUTPUT String series1_markerColor
+
+# Series 2 outputs
+#@OUTPUT Double[] series2_xvalues
+#@OUTPUT Double[] series2_yvalues
+#@OUTPUT Double[] series2_size
+#@OUTPUT String[] series2_label
+#@OUTPUT String[] series2_color
+#@OUTPUT String series2_markerColor
+
+# Series 3 Outputs
+#@OUTPUT Double[] series3_xvalues
+#@OUTPUT Double[] series3_yvalues
+#@OUTPUT Double[] series3_size
+#@OUTPUT String[] series3_label
+#@OUTPUT String[] series3_color
+#@OUTPUT String series3_markerColor
+
+series1_markerColor = "lightgreen"
+series2_markerColor = "lightgreen"
+series3_markerColor = "lightgreen"
+
+# Datapoints for the FRET population
+series1_xvalues = []
+series1_yvalues = []
+series1_size = []
+series1_color = []
+series1_label = []
+
+for molecule in archive.molecules().iterator():
+  series1_xvalues.append(molecule.getParameter("E")) #Make a list of E values
+  series1_yvalues.append(molecule.getParameter("S")) #Make a list of S values
+  series1_size.append(4.0)
+  series1_color.append("grey")
+  series1_label.append(molecule.getUID()) #Make a list of the UIDs
+
+# Datapoints for the AO population
+series2_xvalues = []
+series2_yvalues = []
+series2_size = []
+series2_color = []
+series2_label = []
+
+for molecule in archive.molecules().iterator():
+    if molecule.hasTag("AO_active"):
+        series2_xvalues.append(molecule.getParameter("iiEappAO")) #Make a list of E values
+        series2_yvalues.append(molecule.getParameter("iiSappAO")) #Make a list of S values
+        series2_size.append(4.0)
+        series2_color.append("red")
+        series2_label.append(molecule.getUID()) #Make a list of the UIDs
+
+# Datapoints for the DO population
+series3_xvalues = []
+series3_yvalues = []
+series3_size = []
+series3_color = []
+series3_label = []
+
+for molecule in archive.molecules().iterator():
+    if molecule.hasTag("DO_active"):
+        series3_xvalues.append(molecule.getParameter("iiEappDO")) #Make a list of E values
+        series3_yvalues.append(molecule.getParameter("iiSappDO")) #Make a list of S values
+        series3_size.append(4.0)
+        series3_color.append("blue")
+        series3_label.append(molecule.getUID()) #Make a list of the UIDs

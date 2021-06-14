@@ -29,15 +29,83 @@
 //This script accompanies the 'FRET dataset analysis using Mars' example pipeline as described on the mars docs.
 //https://duderstadt-lab.github.io/mars-docs/examples/FRET
 
-//Add the region 'active' to each metadata archive in the merged archive
-
-//import dependencies
+//Assign the global region "active"
 #@ MoleculeArchive archive
+#@ ImageJ ij
 
 import de.mpg.biochem.mars.molecule.*
+import de.mpg.biochem.mars.table.*
 import de.mpg.biochem.mars.util.*
+import org.scijava.table.*
 
-//add the region
 archive.metadata().forEach{metadata ->
 	metadata.putRegion(new MarsRegion("active", "T", 2, 500, "#416EF4", 0.2))
 }
+
+//KCP analysis of 1 Red vs. T
+import de.mpg.biochem.mars.kcp.commands.*
+
+final KCPCommand kcpCalc = new KCPCommand();
+
+kcpCalc.setContext(ij.getContext());
+
+kcpCalc.setArchive(archive);
+kcpCalc.setXColumn("T");
+kcpCalc.setYColumn("1 Red");
+kcpCalc.setConfidenceLevel(0.95);
+kcpCalc.setGlobalSigma(50000);
+kcpCalc.setRegionSource("Metadata");
+kcpCalc.setCalculateBackgroundSigma(false);
+kcpCalc.setBackgroundRegion("None");
+kcpCalc.setAnalyzeRegion(true);
+kcpCalc.setRegion("active");
+kcpCalc.setFitSteps(true);
+kcpCalc.setIncludeTags("All");
+kcpCalc.setTags("None");
+kcpCalc.setThreads(8)
+
+kcpCalc.run();
+
+//KCP analysis of 0 vs. T
+final KCPCommand kcpCalc2 = new KCPCommand();
+
+kcpCalc2.setContext(ij.getContext());
+
+kcpCalc2.setArchive(archive);
+kcpCalc2.setXColumn("T");
+kcpCalc2.setYColumn("0");
+kcpCalc2.setConfidenceLevel(0.95);
+kcpCalc2.setGlobalSigma(50000);
+kcpCalc2.setRegionSource("Metadata");
+kcpCalc2.setCalculateBackgroundSigma(false);
+kcpCalc2.setBackgroundRegion("None");
+kcpCalc2.setAnalyzeRegion(true);
+kcpCalc2.setRegion("active");
+kcpCalc2.setFitSteps(true);
+kcpCalc2.setIncludeTags("All");
+kcpCalc2.setTags("None");
+kcpCalc2.setThreads(8)
+
+kcpCalc2.run();
+
+//KCP analyisis of 1 Green vs. T
+final KCPCommand kcpCalc3 = new KCPCommand();
+
+kcpCalc3.setContext(ij.getContext());
+
+kcpCalc3.setArchive(archive);
+kcpCalc3.setXColumn("T");
+kcpCalc3.setYColumn("1 Green");
+kcpCalc3.setConfidenceLevel(0.95);
+kcpCalc3.setGlobalSigma(50000);
+kcpCalc3.setRegionSource("Metadata");
+kcpCalc3.setCalculateBackgroundSigma(false);
+kcpCalc3.setBackgroundRegion("None");
+kcpCalc3.setAnalyzeRegion(true);
+kcpCalc3.setRegion("active");
+kcpCalc3.setFitSteps(true);
+kcpCalc3.setIncludeTags("All");
+kcpCalc3.setTags("None");
+kcpCalc3.setThreads(8)
+
+kcpCalc3.run();
