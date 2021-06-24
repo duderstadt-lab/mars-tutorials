@@ -53,11 +53,12 @@ series1_color = []
 series1_label = []
 
 for molecule in archive.molecules().iterator():
-  series1_xvalues.append(molecule.getParameter("E")) #Make a list of E values
-  series1_yvalues.append(molecule.getParameter("S")) #Make a list of S values
-  series1_size.append(4.0)
-  series1_color.append("grey")
-  series1_label.append(molecule.getUID()) #Make a list of the UIDs
+  if molecule.hasTag("Active_single"):
+    series1_xvalues.append(molecule.getParameter("E")) #Make a list of E values
+    series1_yvalues.append(molecule.getParameter("S")) #Make a list of S values
+    series1_size.append(4.0)
+    series1_color.append("grey")
+    series1_label.append(molecule.getUID()) #Make a list of the UIDs
 
 # Datapoints for the AO population
 series2_xvalues = []
