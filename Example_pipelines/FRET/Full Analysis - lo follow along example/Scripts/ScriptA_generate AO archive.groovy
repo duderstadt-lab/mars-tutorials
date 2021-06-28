@@ -47,7 +47,7 @@ import java.lang.*
 
 //Set the name of the path and file that will be generated
 def file_name =  "0_AOarchive.yama"
-def path_name = "/Users/nadiahuisjes/Desktop/Mars Paper/Analysis scripts/210611 - 1-mid Analysis/Archives/"
+def path_name = "/Users/nadiahuisjes/Desktop/Mars Paper/Analysis scripts/210608 - 1-lo Analysis/Archives/"
 
 
 //Run the peak finder command for the AO archive
@@ -61,7 +61,7 @@ peakFinder.setRoi(x = 6, y = 9, width = 299, height = 490)
 peakFinder.setChannel(0)
 peakFinder.setUseDogFiler(true)
 peakFinder.setDogFilterRadius(5.5)
-peakFinder.setThreshold(30)
+peakFinder.setThreshold(500)
 peakFinder.setMinimumDistance(10)
 peakFinder.setT(2)
 peakFinder.setFindNegativePeaks(false)
@@ -98,7 +98,7 @@ transformROIs.setChannel(1)
 transformROIs.setT(2)
 transformROIs.setUseDogFilter(true)
 transformROIs.setDogFilterRadius(5.5)
-transformROIs.setThreshold(20)
+transformROIs.setThreshold(500)
 transformROIs.setFilterOriginalRois(true)
 transformROIs.setFilterColocalizingRois(true)
 transformROIs.setColocalizeSearchRadius(2)

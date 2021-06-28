@@ -39,7 +39,8 @@ import de.mpg.biochem.mars.util.*
 import org.scijava.table.*
 
 archive.metadata().forEach{metadata ->
-	metadata.putRegion(new MarsRegion("active", "T", 2, 800, "#416EF4", 0.2))
+	metadata.putRegion(new MarsRegion("active", "T", 2, 500, "#416EF4", 0.2))
+	metadata.addTag("lo")
 }
 
 //KCP analysis of 1 Red vs. T
@@ -52,8 +53,8 @@ kcpCalc.setContext(ij.getContext());
 kcpCalc.setArchive(archive);
 kcpCalc.setXColumn("T");
 kcpCalc.setYColumn("1 Red");
-kcpCalc.setConfidenceLevel(0.95);
-kcpCalc.setGlobalSigma(8000);
+kcpCalc.setConfidenceLevel(0.99);
+kcpCalc.setGlobalSigma(70000);
 kcpCalc.setRegionSource("Metadata");
 kcpCalc.setCalculateBackgroundSigma(false);
 kcpCalc.setBackgroundRegion("None");
@@ -74,8 +75,8 @@ kcpCalc2.setContext(ij.getContext());
 kcpCalc2.setArchive(archive);
 kcpCalc2.setXColumn("T");
 kcpCalc2.setYColumn("0");
-kcpCalc2.setConfidenceLevel(0.95);
-kcpCalc2.setGlobalSigma(8000);
+kcpCalc2.setConfidenceLevel(0.99);
+kcpCalc2.setGlobalSigma(70000);
 kcpCalc2.setRegionSource("Metadata");
 kcpCalc2.setCalculateBackgroundSigma(false);
 kcpCalc2.setBackgroundRegion("None");
@@ -96,8 +97,8 @@ kcpCalc3.setContext(ij.getContext());
 kcpCalc3.setArchive(archive);
 kcpCalc3.setXColumn("T");
 kcpCalc3.setYColumn("1 Green");
-kcpCalc3.setConfidenceLevel(0.95);
-kcpCalc3.setGlobalSigma(8000);
+kcpCalc3.setConfidenceLevel(0.99);
+kcpCalc3.setGlobalSigma(70000);
 kcpCalc3.setRegionSource("Metadata");
 kcpCalc3.setCalculateBackgroundSigma(false);
 kcpCalc3.setBackgroundRegion("None");

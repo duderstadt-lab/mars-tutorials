@@ -126,7 +126,6 @@ for (def mUID : archive.getMetadataUIDs()) { //iterate through metadata records
 	double background_Iaemaex = metadata.getParameter("background_aemaex")
 	double background_Iaemdex = metadata.getParameter("background_aemdex")
 	double background_Idemdex = metadata.getParameter("background_demdex")
-	println(background_Iaemaex)
 
 	archive.molecules()
 	.filter{molecule -> molecule.getMetadataUID().equals(mUID)}

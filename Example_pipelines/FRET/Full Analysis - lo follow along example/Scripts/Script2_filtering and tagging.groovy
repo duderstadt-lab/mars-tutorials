@@ -62,6 +62,10 @@ archive.getMoleculeUIDs().stream().forEach({UID ->
 })
 
 //asses whether the green dye bleached in the trace and assign Boolean parameters
+//discriminate between two options: A bleach before D, results in 3 D states
+//									A bleach after D, results in 2 D states
+
+
 archive.getMoleculeUIDs().stream().forEach({UID ->
   Molecule molecule = archive.get(UID)
   if (molecule.hasSegmentsTable("T","1 Green","active")){
@@ -72,16 +76,25 @@ archive.getMoleculeUIDs().stream().forEach({UID ->
   	double steps = table.getColumnAsDoubles("A").size()
   	if (Seg_diff !=0){
   	molecule.setParameter("Green_step",true)}
-  		else{
-  			molecule.setParameter("Green_step",false)}
+  		else{molecule.setParameter("Green_step", false)}
   	if (Seg_diff>0 && steps==2){
-  		molecule.setParameter("Green_singlebleach", true)}
-  		else{molecule.setParameter("Green_singlebleach", false)}
+		molecule.setParameter("Green_dual_state", true)}
+		else{molecule.setParameter("Green_dual_state", false)}
+	if (steps==3){
+		double ymiddle = table.getColumnAsDoubles("A")[1]
+		if (ymin<ymax && ymax<ymiddle){
+			molecule.setParameter("Green_tri_state", true)
+		}	else{molecule.setParameter("Green_tri_state", false)}
+		}
+		else{molecule.setParameter("Green_tri_state", false)}
   }
   	else{
-  		molecule.setParameter("Green_singlebleach", false)
+  		molecule.setParameter("Green_dual_state", false)
+  		molecule.setParameter("Green_tri_state", false)
   		molecule.setParameter("Green_step",false)}
 })
+
+
 
 //asses whether the bleaching was observed in the FRET trace and assign Boolean parameters
 archive.getMoleculeUIDs().stream().forEach({UID ->
@@ -97,22 +110,40 @@ archive.getMoleculeUIDs().stream().forEach({UID ->
   		molecule.setParameter("FRET_bleach",true)}}
 })
 
+//calculate the difference between the green and red signal after photobleaching
+//these signals should be relatively similar to one another, else the peak should be excluded from the analysis.
+archive.getMoleculeUIDs().stream().forEach({UID ->
+  Molecule molecule = archive.get(UID)
+  if (molecule.hasSegmentsTable("T","0","active") && molecule.hasSegmentsTable("T","1 Green","active")){
+  	MarsTable table = molecule.getSegmentsTable("T","0","active")
+  	MarsTable table2 = molecule.getSegmentsTable("T","1 Green","active")
+  	double Ibckaemaex = table.min("A")
+  	double Ibckdemdex = table2.min("A")
+  	double factor = Math.abs(Ibckaemaex / Ibckdemdex)
+  	double factor2 = Math.abs(Ibckdemdex / Ibckaemaex)
+  	if (factor > 2 || factor2 > 2){
+  		molecule.addTag("Outlier_signal")}
+  	}
+  }
+)
+
 
 //tag the molecules according to their bleaching parameter values as calculated previously
 archive.getMoleculeUIDs().stream().forEach({UID ->
   def molecule = archive.get(UID)
-  if (archive.metadataHasTag(molecule.getMetadataUID(),"FRET")){
-  	if (molecule.getBooleanParameter("Red_step")&& molecule.getBooleanParameter("Green_step")&& molecule.getBooleanParameter("FRET_bleach")){
-  	molecule.addTag("Active")
-    } else {
-  	molecule.addTag("background")}
-  if (molecule.hasTag("Active")&&molecule.getBooleanParameter("Red_singlebleach")&&molecule.getBooleanParameter("Green_singlebleach")&& molecule.getBooleanParameter("FRET_bleach")){
-  	molecule.addTag("Active_single")}}
-  if (archive.metadataHasTag(molecule.getMetadataUID(),"AO")){
-  	if (molecule.getBooleanParameter("Red_singlebleach")&& !molecule.getBooleanParameter("Green_step")&& !molecule.getBooleanParameter("FRET_bleach")){
-  		molecule.addTag("AO_active")}}
-  if (archive.metadataHasTag(molecule.getMetadataUID(),"DO")){
-  	if (molecule.getBooleanParameter("Green_singlebleach")&& !molecule.getBooleanParameter("Red_step") && !molecule.getBooleanParameter("FRET_bleach")){
-  		molecule.addTag("DO_active")}}
+  if (!molecule.hasTag("Outlier_signal")){
+  	if (archive.metadataHasTag(molecule.getMetadataUID(),"FRET")){
+  	 if (molecule.getBooleanParameter("Red_singlebleach") && molecule.getBooleanParameter("FRET_bleach") && molecule.getBooleanParameter("Green_dual_state")){
+  		 molecule.addTag("Active_single")}
+  	 if (molecule.getBooleanParameter("Red_singlebleach") && molecule.getBooleanParameter("FRET_bleach") && molecule.getBooleanParameter("Green_tri_state")){
+  		 molecule.addTag("Active_single")}
+   }
+   if (archive.metadataHasTag(molecule.getMetadataUID(),"AO")){
+  	 if (molecule.getBooleanParameter("Red_singlebleach")&& !molecule.getBooleanParameter("Green_step")&& !molecule.getBooleanParameter("FRET_bleach")){
+  		 molecule.addTag("AO_active")}}
+   if (archive.metadataHasTag(molecule.getMetadataUID(),"DO")){
+  	 if (molecule.getBooleanParameter("Green_dual_state")&& !molecule.getBooleanParameter("Red_step") && !molecule.getBooleanParameter("FRET_bleach")){
+  		 molecule.addTag("DO_active")}
+  		}
+  }
 })
-

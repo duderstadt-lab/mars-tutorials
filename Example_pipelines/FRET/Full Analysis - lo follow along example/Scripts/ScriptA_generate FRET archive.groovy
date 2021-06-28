@@ -47,7 +47,7 @@ import java.lang.*
 
 //Set the name of the path and file that will be generated
 def file_name =  "0_FRETarchive.yama"
-def path_name = "/Users/nadiahuisjes/Desktop/Mars Paper/Analysis scripts/210611 - 1-mid Analysis/Archives/"
+def path_name = "/Users/nadiahuisjes/Desktop/Mars Paper/Analysis scripts/210608 - 1-lo Analysis/Archives/"
 
 
 //Run the Peak Finder command for the FRET archive
@@ -61,7 +61,7 @@ peakFinder2.setRoi(x = 6, y = 9, width = 299, height = 490)
 peakFinder2.setChannel(0)
 peakFinder2.setUseDogFiler(true)
 peakFinder2.setDogFilterRadius(5.5)
-peakFinder2.setThreshold(30)
+peakFinder2.setThreshold(500)
 peakFinder2.setMinimumDistance(10)
 peakFinder2.setT(2)
 peakFinder2.setFindNegativePeaks(false)
@@ -99,7 +99,7 @@ transformROIs2.setChannel(1)
 transformROIs2.setT(2)
 transformROIs2.setUseDogFilter(true)
 transformROIs2.setDogFilterRadius(5.5)
-transformROIs2.setThreshold(20)
+transformROIs2.setThreshold(500)
 transformROIs2.setFilterOriginalRois(true)
 transformROIs2.setFilterColocalizingRois(false)
 transformROIs2.setColocalizeSearchRadius(2)
