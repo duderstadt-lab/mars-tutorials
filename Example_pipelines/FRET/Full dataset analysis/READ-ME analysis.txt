@@ -1,0 +1,35 @@
+READ ME - Analyze all data in the FRET example
+
+Due to intensity differences in the videos provided by Hellenkamp et al,
+different mars command settings need to be used. Follow the instructions
+below to fully analyze the dataset in a correct way.
+
+1. Convert all videos to the right format as discussed on the docs.
+
+2. Generate the FRET, AO, and DO archive from each video as shown for the
+example on the docs. https://duderstadt-lab.github.io/mars-docs/examples/FRET/
+
+3. Use the affine2D matrix as calculated on the docs
+
+4. For each video, generate the FRET, AO, and DO archives according to the
+information on the docs.
+
+5. Merge the archives so each video has a master archive containing the
+FRET, AO, and DO information.
+
+6. Merge the archives in the following way:
+  - 1-lo video 0 to 4
+  - 1-lo video 5 & 6
+  - 1-mid video 0 to 6
+This will give you three master archives to continue the analysis with.
+
+7. On each archive, run the full analysis script. Change the video settings
+in the top part of the script accordingly. Save all three archives after analysis.
+
+8. Merge the fully analyzed archives into one big archive.
+
+9. Run the full analysis script, beta gamma correction, on this big archive
+to redo the beta gamma fit with all data together.
+
+10. Save the result. Open jupyter notebook, set up the connection as described
+on the docs and run all cells. The final cell will supply the desired plot.
