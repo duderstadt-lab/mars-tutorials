@@ -54,7 +54,13 @@ double gamma = beta_gamma[1]
 //6.E Calculation of FAA ("iiiIaemaex") and FDD ("iiiIdemdex")
 archive.molecules().forEach{molecule ->
     MarsTable table = molecule.getTable()
-    double Tendfret = getTendFRET(molecule)
+    double Tendfret = 0
+  		if (molecule.hasTag("DO"))
+  			Tendfret = molecule.getPosition("Donor_Bleach").getPosition()
+		else if (molecule.hasTag("AO"))
+			Tendfret = molecule.getPosition("Acceptor_Bleach").getPosition()
+		else if (molecule.hasTag("FRET"))
+			Tendfret = getTendFRET(molecule)
     double len = table.getRowCount()
 	for (i=0; i<Tendfret; i++){
 		double Iaemaex = table.getValue("iiIaemaex",i)
@@ -88,7 +94,8 @@ def getTendFRET(def molecule) {
 	if (molecule.hasPosition("Acceptor_Bleach"))
 		acceptorBleachT = molecule.getPosition("Acceptor_Bleach").getPosition()
 
-	return (donorBleachT <= acceptorBleachT) ? donorBleachT : acceptorBleachT
+	//return (donorBleachT <= acceptorBleachT) ? donorBleachT : acceptorBleachT
+	return (donorBleachT <= acceptorBleachT) ? acceptorBleachT : donorBleachT
 }
 
 def Calc_E_S(String E_name, String S_name, String Iaemdex, String Idemdex, String Iaemaex) {

@@ -1,0 +1,35 @@
+{
+  "window" : {
+    "x" : 0,
+    "y" : 23,
+    "width" : 800,
+    "height" : 600
+  },
+  "DashboardTab" : {
+    "widgets" : [ ]
+  },
+  "MetadataTab" : {
+    "searchField" : "",
+    "marsMetadataSelectionUID" : "qZvMbeejDs",
+    "centerPane" : {
+      "marsMetadataDashboard" : {
+        "widgets" : [ ]
+      }
+    }
+  },
+  "MoleculesTab" : {
+    "searchField" : "",
+    "moleculeSelectionUID" : "2HAZ3MG172sckd2o3qcGoa",
+    "centerPane" : {
+      "plotPane" : {
+        "numberSubPlots" : 1,
+        "subPlots" : [ { } ]
+      },
+      "moleculeDashboard" : {
+        "widgets" : [ ]
+      }
+    }
+  },
+  "CommentsTab" : { },
+  "SettingsTab" : { }
+}

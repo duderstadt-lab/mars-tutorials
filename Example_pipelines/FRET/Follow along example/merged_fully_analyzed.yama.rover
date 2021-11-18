@@ -1,0 +1,82 @@
+{
+  "window" : {
+    "x" : 0,
+    "y" : 43,
+    "width" : 1804,
+    "height" : 883
+  },
+  "DashboardTab" : {
+    "widgets" : [ {
+      "name" : "ArchivePropertiesWidget",
+      "settings" : {
+        "Width" : 270.0,
+        "Height" : 270.0
+      }
+    }, {
+      "name" : "TagFrequencyWidget",
+      "settings" : { }
+    } ]
+  },
+  "MetadataTab" : {
+    "searchField" : "",
+    "marsMetadataSelectionUID" : "qZvMbeejDs",
+    "centerPane" : {
+      "marsMetadataDashboard" : {
+        "widgets" : [ ]
+      }
+    }
+  },
+  "MoleculesTab" : {
+    "searchField" : "DO, Ac",
+    "moleculeSelectionUID" : "cnsPscRZMsxVwJbPhfoVGn",
+    "centerPane" : {
+      "plotPane" : {
+        "numberSubPlots" : 1,
+        "subPlots" : [ {
+          "xAxisName" : "T",
+          "yAxisName" : "0_Profile_Corrected",
+          "indicators" : "Molecules",
+          "plotSeries" : [ {
+            "track" : true,
+            "type" : "Line",
+            "xColumn" : "T",
+            "yColumn" : "0_Profile_Corrected",
+            "style" : " ",
+            "color" : "0xb71c1cff",
+            "stroke" : "1.0",
+            "showSegments" : false,
+            "segmentsColor" : "0xff0000ff",
+            "segmentsStroke" : "1.0"
+          }, {
+            "track" : false,
+            "type" : "Line",
+            "xColumn" : "T",
+            "yColumn" : "1_Green",
+            "style" : " ",
+            "color" : "0x1a237eff",
+            "stroke" : "1.0",
+            "showSegments" : false,
+            "segmentsColor" : "0xff0000ff",
+            "segmentsStroke" : "1.0"
+          }, {
+            "track" : false,
+            "type" : "Line",
+            "xColumn" : "T",
+            "yColumn" : "1_Red",
+            "style" : " ",
+            "color" : "0xbdbdbdff",
+            "stroke" : "1.0",
+            "showSegments" : false,
+            "segmentsColor" : "0xff0000ff",
+            "segmentsStroke" : "1.0"
+          } ]
+        } ]
+      },
+      "moleculeDashboard" : {
+        "widgets" : [ ]
+      }
+    }
+  },
+  "CommentsTab" : { },
+  "SettingsTab" : { }
+}
