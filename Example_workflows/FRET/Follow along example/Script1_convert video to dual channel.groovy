@@ -1,24 +1,17 @@
-#@ ImagePlus image
-#@output ImagePlus twoChannelImage
+#@ DatasetService datasetService
+#@ Dataset dataset
+#@OUTPUT ImgPlus imgPlus
 
-import ij.IJ
-import ij.ImagePlus
+import net.imglib2.view.Views
+import net.imagej.axis.AxisType
+import net.imagej.axis.Axes
+import net.imagej.ImgPlus
 
-twoChannelImage = IJ.createHyperStack(image.getTitle(), image.getWidth(), image.getHeight(), 2, 1, (int)(image.getNFrames()/2), 16)
+img = dataset.getImgPlus().getImg()
 
-newFrameIndex = 1
-for (int frame=1; frame < image.getNFrames(); frame+=2) {
-	image.setPosition(frame)
-	twoChannelImage.setPosition(1, 1, newFrameIndex)
-	for (int x=0; x < image.getWidth(); x++)
-		for (int y=0; y < image.getHeight(); y++)
-			 twoChannelImage.getProcessor().set(x, y, image.getProcessor().get(x, y))
-	
-	image.setPosition(frame+1)
-	twoChannelImage.setPosition(2, 1, newFrameIndex)
-	for (int x=0; x < image.getWidth(); x++)
-		for (int y=0; y < image.getHeight(); y++)
-			 twoChannelImage.getProcessor().set(x, y, image.getProcessor().get(x, y))
-			 
-	newFrameIndex++
-}
+viewOfCh1 = Views.subsample(img, 1, 1, 2)
+viewOfCh2 = Views.subsample(Views.interval(img, new long[]{0, 0, 1}, new long[]{511, 511, 999}), 1, 1, 2)
+rai = Views.stack(viewOfCh1, viewOfCh2)
+
+axes = new AxisType[]{ Axes.X, Axes.Y, Axes.TIME, Axes.CHANNEL}
+imgPlus = new ImgPlus( datasetService.create( rai  ), dataset.getName() + "_withChannels", axes )
