@@ -42,7 +42,7 @@ import groovy.lang.*
 import org.apache.commons.math3.stat.regression.SimpleRegression
 
 builder = new LogBuilder()
-String log = LogBuilder.buildTitleBlock("smFRET workflow 2")
+String log = LogBuilder.buildTitleBlock("FRET beta gamma correction workflow")
 builder.addParameter("Workflow version", "0.3")
 builder.addParameter("Accepted FRET", archive.molecules().filter{ m -> m.hasTag("FRET") && m.hasTag("Accepted")}.count())
 

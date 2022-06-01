@@ -55,7 +55,7 @@ archive.molecules().filter{ molecule -> molecule.hasTag("Accepted")}.forEach{ mo
 		FRET_tag_count++
 }
 
-String log = LogBuilder.buildTitleBlock("smFRET workflow 1")
+String log = LogBuilder.buildTitleBlock("FRET alpha delta correction workflow")
 builder.addParameter("Workflow version", "0.3")
 builder.addParameter("Accepted DO", DO_tag_count)
 builder.addParameter("Accepted AO", AO_tag_count)
