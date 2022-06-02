@@ -201,12 +201,12 @@ def alpha_delta_calculation() {
 			mol_E_stat += row.getValue("iiEapp")
 			mol_obs++
 		}
+		mol_E_stat = mol_E_stat / mol_obs
+
 		if (molecule.hasTag("Accepted")) {
 			E_stat += mol_E_stat
-			observations += mol_obs
+			observations++
 		}
-
-		mol_E_stat = mol_E_stat / mol_obs
 		molecule.setParameter("alpha", mol_E_stat/(1-mol_E_stat))
 	}
 	E_stat = E_stat / observations
@@ -220,12 +220,12 @@ def alpha_delta_calculation() {
 			mol_S_stat += row.getValue("iiSapp")
 			mol_obs++
 		}
+		mol_S_stat = mol_S_stat / mol_obs
+
 		if (molecule.hasTag("Accepted")) {
 			S_stat += mol_S_stat
-			observations += mol_obs
+			observations++
 		}
-
-		mol_S_stat = mol_S_stat / mol_obs
 		molecule.setParameter("delta", mol_S_stat/(1-mol_S_stat))
 	}
 	S_stat = S_stat / observations
