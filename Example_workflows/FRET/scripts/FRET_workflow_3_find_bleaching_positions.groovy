@@ -29,6 +29,8 @@
 //This script accompanies the 'FRET dataset analysis using Mars' example pipeline as described on the mars docs.
 //https://duderstadt-lab.github.io/mars-docs/examples/FRET
 
+#@ String (label="Aem|Aex (format: channel_region)", value="637_Red") aemaex
+#@ String (label="Dem|Dex (format: channel_region)", value="532_Green") demdex
 #@ MoleculeArchive archive
 #@ ImageJ ij
 
@@ -56,7 +58,7 @@ scpCalc.setAddSegmentsTable(false)
 
 //Add Acceptor_Bleach to FRET molecules
 scpCalc.setPosition("Acceptor_Bleach")
-scpCalc.setYColumn("0")
+scpCalc.setYColumn(aemaex)
 scpCalc.setTags("FRET")
 scpCalc.run()
 
@@ -66,7 +68,7 @@ scpCalc.run()
 
 //Add Donor_Bleach to FRET molecules
 scpCalc.setPosition("Donor_Bleach")
-scpCalc.setYColumn("1_Green")
+scpCalc.setYColumn(demdex)
 scpCalc.setTags("FRET")
 scpCalc.run()
 

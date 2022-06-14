@@ -29,6 +29,11 @@
 //This script accompanies the 'FRET dataset analysis using Mars' example pipeline as described on the mars docs.
 //https://duderstadt-lab.github.io/mars-docs/examples/FRET
 
+#@ String (label="Aem|Aex (format: channel_region)", value="637_Red_Profile_Corrected") aemaex
+#@ String (label="Aem|Dex (format: channel_region)", value="532_Red") aemdexName
+#@ String (label="Dem|Dex (format: channel_region)", value="532_Green") demdexName
+#@ String (label="Gamma model", choices={"static molecules", "dynamic molecules"}, style="radioButtonVertical") gammaModel
+#@ Double (label="Dynamic efficiency threshold", value = 0.4) gammaEfficiencyThreshold
 #@ MoleculeArchive archive
 
 //Import packages
@@ -37,6 +42,8 @@ import de.mpg.biochem.mars.table.*
 import de.mpg.biochem.mars.util.*
 import org.scijava.table.*
 import groovy.lang.*
+import de.mpg.biochem.mars.kcp.commands.*
+import org.apache.commons.math3.stat.regression.SimpleRegression
 
 builder = new LogBuilder()
 int DO_tag_count = 0
@@ -51,8 +58,8 @@ archive.molecules().filter{ molecule -> molecule.hasTag("Accepted")}.forEach{ mo
 		FRET_tag_count++
 }
 
-String log = LogBuilder.buildTitleBlock("smFRET workflow 1")
-builder.addParameter("Workflow version", "0.2")
+String log = LogBuilder.buildTitleBlock("FRET alex corrections workflow")
+builder.addParameter("Workflow version", "0.1")
 builder.addParameter("Accepted DO", DO_tag_count)
 builder.addParameter("Accepted AO", AO_tag_count)
 builder.addParameter("Accepted FRET", FRET_tag_count)
@@ -67,27 +74,27 @@ archive.molecules().forEach{molecule ->
 	//BG correction for Idemdex
 	if (molecule.hasPosition("Donor_Bleach")) {
 		donorBleachT = molecule.getPosition("Donor_Bleach").getPosition()
-		double donorBackground = table.mean("1_Green", "T", donorBleachT, table.getValue("T", table.getRowCount() - 1))
-		table.rows().forEach{ row -> row.setValue("iiIdemdex", row.getValue("1_Green") - donorBackground)}
+		double donorBackground = table.mean(demdexName, "T", donorBleachT, table.getValue("T", table.getRowCount() - 1))
+		table.rows().forEach{ row -> row.setValue("iiIdemdex", row.getValue(demdexName) - donorBackground)}
 	} else {
-		double donorBackground = table.mean("1_Green", "T", 0, table.getValue("T", table.getRowCount() - 1))
-		table.rows().forEach{ row -> row.setValue("iiIdemdex", row.getValue("1_Green") - donorBackground)}
+		double donorBackground = table.mean(demdexName, "T", 0, table.getValue("T", table.getRowCount() - 1))
+		table.rows().forEach{ row -> row.setValue("iiIdemdex", row.getValue(demdexName) - donorBackground)}
 	}
 
 	//BG correction for Iaemaex
 	if (molecule.hasPosition("Acceptor_Bleach")) {
 		acceptorBleachT = molecule.getPosition("Acceptor_Bleach").getPosition()
-		double acceptorBackground = table.mean("0_Profile_Corrected", "T", acceptorBleachT, table.getValue("T", table.getRowCount() - 1))
-		table.rows().forEach{ row -> row.setValue("iiIaemaex", row.getValue("0_Profile_Corrected") - acceptorBackground)}
+		double acceptorBackground = table.mean(aemaex, "T", acceptorBleachT, table.getValue("T", table.getRowCount() - 1))
+		table.rows().forEach{ row -> row.setValue("iiIaemaex", row.getValue(aemaex) - acceptorBackground)}
 	} else {
-		double acceptorBackground = table.mean("0_Profile_Corrected", "T", 0, table.getValue("T", table.getRowCount() - 1))
-		table.rows().forEach{ row -> row.setValue("iiIaemaex", row.getValue("0_Profile_Corrected") - acceptorBackground)}
+		double acceptorBackground = table.mean(aemaex, "T", 0, table.getValue("T", table.getRowCount() - 1))
+		table.rows().forEach{ row -> row.setValue("iiIaemaex", row.getValue(aemaex) - acceptorBackground)}
 	}
 
 	//BG correction for Iaemdex
 	double afterBothBleach = (donorBleachT >= acceptorBleachT) ? donorBleachT : acceptorBleachT
-	double background = table.mean("1_Red", "T", afterBothBleach, table.getValue("T", table.getRowCount() - 1))
-	table.rows().forEach{ row -> row.setValue("iiIaemdex", row.getValue("1_Red") - background)}
+	double background = table.mean(aemdexName, "T", afterBothBleach, table.getValue("T", table.getRowCount() - 1))
+	table.rows().forEach{ row -> row.setValue("iiIaemdex", row.getValue(aemdexName) - background)}
 }
 
 //5.C Calculation of iiEapp and iiSapp values
@@ -98,6 +105,9 @@ Calc_E_S("iiEapp", "iiSapp", "iiIaemdex", "iiIdemdex", "iiIaemaex")
 alpha_delta_list = alpha_delta_calculation()
 double alpha = alpha_delta_list[0]
 double delta = alpha_delta_list[1]
+
+builder.addParameter("alpha", alpha)
+builder.addParameter("delta", delta)
 
 //6.B Calculation of FAD ('iiiIaemdex') values corrected for alpha and delta
 archive.molecules().forEach{molecule ->
@@ -126,8 +136,41 @@ archive.molecules().forEach{molecule ->
 //6.C Calculation of iiiSapp and iiiEapp (corrected for alpha and delta)
 Calc_E_S("iiiEapp", "iiiSapp", "FAD", "iiIdemdex", "iiIaemaex")
 
-builder.addParameter("alpha", alpha)
-builder.addParameter("delta", delta)
+//6.D Calculation of the beta and gamma factors
+def beta_gamma = beta_gamma_calculation()
+double beta = beta_gamma[0]
+double gamma = beta_gamma[1]
+
+//6.E Calculation of FAA ("iiiIaemaex") and FDD ("iiiIdemdex")
+archive.molecules().forEach{molecule ->
+    MarsTable table = molecule.getTable()
+    double Tendfret = 0
+  		if (molecule.hasTag("DO"))
+  			Tendfret = molecule.getPosition("Donor_Bleach").getPosition()
+		else if (molecule.hasTag("AO"))
+			Tendfret = molecule.getPosition("Acceptor_Bleach").getPosition()
+		else if (molecule.hasTag("FRET"))
+			Tendfret = getTendFRET(molecule)
+    double len = table.getRowCount()
+	for (i=0; i<Tendfret; i++){
+		double Iaemaex = table.getValue("iiIaemaex",i)
+		double Idemdex = table.getValue("iiIdemdex",i)
+		double FDD = gamma * Idemdex
+		double FAA = Iaemaex / beta
+		table.setValue("FDD",(int)i,FDD)
+		table.setValue("FAA",(int)i,FAA)
+	}
+	for (i=Tendfret; i<len; i++){
+		table.setValue("FDD",(int)i,"NaN")
+		table.setValue("FAA",(int)i,"NaN")
+	}
+}
+
+//6.F Calculation of the fully corrected S and E values
+Calc_E_S("E", "S", "FAD", "FDD", "FAA")
+
+builder.addParameter("beta", beta)
+builder.addParameter("gamma", gamma)
 log += builder.buildParameterList()
 log += "\n" + LogBuilder.endBlock(true) + "\n"
 archive.logln(log)
@@ -141,7 +184,8 @@ def getTendFRET(def molecule) {
 	if (molecule.hasPosition("Acceptor_Bleach"))
 		acceptorBleachT = molecule.getPosition("Acceptor_Bleach").getPosition()
 
-	return (donorBleachT <= acceptorBleachT) ? donorBleachT : acceptorBleachT
+	//return (donorBleachT <= acceptorBleachT) ? donorBleachT : acceptorBleachT
+	return (donorBleachT <= acceptorBleachT) ? acceptorBleachT : donorBleachT
 }
 
 def Calc_E_S(String E_name, String S_name, String Iaemdex, String Idemdex, String Iaemaex) {
@@ -150,29 +194,29 @@ def Calc_E_S(String E_name, String S_name, String Iaemdex, String Idemdex, Strin
 	int global_count = 0
 	archive.molecules().forEach{molecule ->
 		MarsTable table = molecule.getTable()
-  		double endT = 0
-  		if (molecule.hasTag("DO"))
-  			endT = molecule.getPosition("Donor_Bleach").getPosition()
+		double endT = 0
+		if (molecule.hasTag("DO"))
+			endT = molecule.getPosition("Donor_Bleach").getPosition()
 		else if (molecule.hasTag("AO"))
 			endT = molecule.getPosition("Acceptor_Bleach").getPosition()
 		else if (molecule.hasTag("FRET"))
 			endT = getTendFRET(molecule)
 
-  		double mol_E = 0
-  		double mol_S = 0
+		double mol_E = 0
+		double mol_S = 0
 		int mol_obs = 0
-  		for (i=0; i < endT; i++) {
-    		double Iaemaex_val = table.getValue(Iaemaex,i)
-    		double Iaemdex_val = table.getValue(Iaemdex,i)
-    		double Idemdex_val = table.getValue(Idemdex,i)
-  			double S = (Iaemdex_val + Idemdex_val) / (Iaemdex_val + Idemdex_val + Iaemaex_val)
-    		double E = Iaemdex_val / (Iaemdex_val + Idemdex_val)
-    		table.setValue(E_name,i,E)
-    		table.setValue(S_name,i,S)
-    		mol_E += E
-    		mol_S += S
+		for (i=0; i < endT; i++) {
+  		double Iaemaex_val = table.getValue(Iaemaex,i)
+  		double Iaemdex_val = table.getValue(Iaemdex,i)
+  		double Idemdex_val = table.getValue(Idemdex,i)
+			double S = (Iaemdex_val + Idemdex_val) / (Iaemdex_val + Idemdex_val + Iaemaex_val)
+  		double E = Iaemdex_val / (Iaemdex_val + Idemdex_val)
+  		table.setValue(E_name,i,E)
+  		table.setValue(S_name,i,S)
+  		mol_E += E
+  		mol_S += S
 			mol_obs++
-  		}
+  	}
 
 		if (molecule.hasTag("Accepted") && molecule.hasTag("FRET")) {
   			global_E += mol_E
@@ -197,12 +241,12 @@ def alpha_delta_calculation() {
 			mol_E_stat += row.getValue("iiEapp")
 			mol_obs++
 		}
+		mol_E_stat = mol_E_stat / mol_obs
+
 		if (molecule.hasTag("Accepted")) {
 			E_stat += mol_E_stat
-			observations += mol_obs
+			observations++
 		}
-
-		mol_E_stat = mol_E_stat / mol_obs
 		molecule.setParameter("alpha", mol_E_stat/(1-mol_E_stat))
 	}
 	E_stat = E_stat / observations
@@ -216,12 +260,12 @@ def alpha_delta_calculation() {
 			mol_S_stat += row.getValue("iiSapp")
 			mol_obs++
 		}
+		mol_S_stat = mol_S_stat / mol_obs
+
 		if (molecule.hasTag("Accepted")) {
 			S_stat += mol_S_stat
-			observations += mol_obs
+			observations++
 		}
-
-		mol_S_stat = mol_S_stat / mol_obs
 		molecule.setParameter("delta", mol_S_stat/(1-mol_S_stat))
 	}
 	S_stat = S_stat / observations
@@ -237,4 +281,62 @@ def alpha_delta_calculation() {
 	}
 
 	return [alpha, delta]
+}
+
+def beta_gamma_calculation() {
+	//initiate the regression
+	def regression = new SimpleRegression(true)
+	//add data to the model
+	if (gammaModel.equals("dynamic molecules"))
+		archive.molecules().filter{ m -> m.hasTag("Accepted") && m.hasTag("FRET")}.forEach{ molecule ->
+			double iiiSappHigh = 0
+			double iiiEappHigh = 0
+			double countHigh = 0
+			double iiiSappLow = 0
+			double iiiEappLow = 0
+			double countLow = 0
+			molecule.getTable().rows().filter{ row -> !Double.isNaN(row.getValue("iiiSapp")) && !Double.isNaN(row.getValue("iiiEapp"))}.forEach{ row ->
+				if (row.getValue("iiiEapp") > gammaEfficiencyThreshold) {
+					iiiSappHigh += row.getValue("iiiSapp")
+					iiiEappHigh += row.getValue("iiiEapp")
+					countHigh++
+				} else {
+					iiiSappLow += row.getValue("iiiSapp")
+					iiiEappLow += row.getValue("iiiEapp")
+					countLow++
+				}
+			}
+			iiiSappHigh = iiiSappHigh/countHigh
+			iiiEappHigh = iiiEappHigh/countHigh
+			regression.addData(iiiEappHigh,1/iiiSappHigh)
+			iiiSappLow = iiiSappLow/countLow
+			iiiEappLow = iiiEappLow/countLow
+			regression.addData(iiiEappLow,1/iiiSappLow)
+		}
+	else
+		archive.molecules().filter{ m -> m.hasTag("Accepted") && m.hasTag("FRET")}.forEach{ molecule ->
+			double iiiSapp = 0
+			double iiiEapp = 0
+			int count = 0
+			molecule.getTable().rows().filter{ row -> !Double.isNaN(row.getValue("iiiSapp")) && !Double.isNaN(row.getValue("iiiEapp"))}.forEach{ row ->
+				iiiSapp += row.getValue("iiiSapp")
+				iiiEapp += row.getValue("iiiEapp")
+				count++
+			}
+			iiiSapp = iiiSapp/count
+			iiiEapp = iiiEapp/count
+			regression.addData(iiiEapp,1/iiiSapp)
+		}
+
+	//save the regression outputs
+	double b = regression.getSlope()
+	double a = regression.getIntercept()
+	double beta = a + b - 1
+	double gamma = (a - 1) / (a + b - 1)
+
+	archive.metadata().forEach{metadata ->
+		metadata.setParameter("beta", beta)
+		metadata.setParameter("gamma", gamma)
+	}
+	return [beta, gamma]
 }

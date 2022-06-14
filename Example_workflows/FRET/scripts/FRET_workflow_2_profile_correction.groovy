@@ -29,10 +29,30 @@
 //This script accompanies the 'FRET dataset analysis using Mars' example pipeline as described on the mars docs.
 //https://duderstadt-lab.github.io/mars-docs/examples/FRET
 
+#@ String (label="Aem|Aex (format: channel_region)", value="637_Red") aemaex
+#@ String (label="Dem|Dex (format: channel_region)", value="532_Green") demdex
+#@ ImgPlus (label="Acceptor excitation profile") acceptor_excitation_profile
+#@ ImgPlus (label="Donor excitation profile") donor_excitation_profile
 #@ MoleculeArchive archive
+#@ OpService opService
+
+import net.imglib2.view.Views
+
+int maxAEX = opService.stats().max(acceptor_excitation_profile).getInteger()
+int maxDEX = opService.stats().max(donor_excitation_profile).getInteger()
+
+def aex_iMap_ra = Views.extendMirrorSingle(acceptor_excitation_profile).randomAccess()
+def dex_iMap_ra = Views.extendMirrorSingle(donor_excitation_profile).randomAccess()
 
 archive.molecules().forEach{ molecule ->
-	archive.getMetadata(molecule.getMetadataUID()).getTags().forEach{ tag ->
-		molecule.addTag(tag)
+	molecule.getTable().rows().forEach{ row ->
+		double aex = row.getValue(aemaex)
+		int aex_x = (int) row.getValue(aemaex + "_X")
+		int aex_y = (int) row.getValue(aemaex + "_Y")
+		int dex_x = (int) row.getValue(demdex + "_X")
+		int dex_y = (int) row.getValue(demdex + "_Y")
+
+		double aex_corr = aex*(dex_iMap_ra.setPositionAndGet(dex_x, dex_y).getRealDouble()/maxDEX)/(aex_iMap_ra.setPositionAndGet(aex_x, aex_y).getRealDouble()/maxAEX)
+		row.setValue(aemaex + "_Profile_Corrected", aex_corr)
 	}
 }

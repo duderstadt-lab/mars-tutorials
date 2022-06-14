@@ -1,9 +1,9 @@
+#@ String (label="Efficiency (E)", value="E") efficiencyColumn
+#@ String (label="Time (s)", value="532_Green_Time_(s)") timeColumn
+#@ Double (label="Efficiency threshold (e.g. 0.5)", value = 0.4) threshold
 #@ MoleculeArchive archive
 
 import de.mpg.biochem.mars.table.*
-
-double threshold = 0.4
-def timeColumnName = "532_Green_Time_(s)"
 
 //First calculate mean populations
 double highE = 0
@@ -13,8 +13,8 @@ int lowEcount = 0
 
 archive.molecules().filter{ m -> m.hasTag("FRET") && m.hasTag("Accepted")}.forEach{ molecule ->
 	MarsTable table = molecule.getTable()
-	table.rows().filter{ row -> !Double.isNaN(row.getValue("E"))}.forEach{ row ->
-		double e = row.getValue("E")
+	table.rows().filter{ row -> !Double.isNaN(row.getValue(efficiencyColumn))}.forEach{ row ->
+		double e = row.getValue(efficiencyColumn)
 		if (e > threshold) {
 			highE += e
 			highEcount++
@@ -29,31 +29,31 @@ double meanHighE = highE / highEcount
 double meanLowE = lowE / lowEcount
 
 archive.molecules().filter{ m -> m.hasTag("FRET") && m.hasTag("Accepted")}.forEach{ molecule ->
-	MarsTable segmentsTable = new MarsTable("E vs " + timeColumnName, "X1", "Y1", "X2", "Y2", "A", "Sigma_A", "B", "Sigma_B")
+	MarsTable segmentsTable = new MarsTable(efficiencyColumn + " vs " + timeColumn, "X1", "Y1", "X2", "Y2", "A", "Sigma_A", "B", "Sigma_B")
 
 	MarsTable table = molecule.getTable()
-	double prevE = table.getValue("E", 0)
-	double x1 = table.getValue(timeColumnName,0)
+	double prevE = table.getValue(efficiencyColumn, 0)
+	double x1 = table.getValue(timeColumn,0)
 	for (int row = 1; row < table.getRowCount(); row++) {
-		double e = table.getValue("E", row)
+		double e = table.getValue(efficiencyColumn, row)
 		if (Double.isNaN(e)) {
-			addSegmentsTableRow(segmentsTable, x1, table.getValue(timeColumnName, row), (prevE > threshold) ? meanHighE : meanLowE)
+			addSegmentsTableRow(segmentsTable, x1, table.getValue(timeColumn, row), (prevE > threshold) ? meanHighE : meanLowE)
 			break
 		}
-		
+
 		//Check for state switching
 		if (prevE > threshold && e < threshold) {
 			//high to low switch
-			addSegmentsTableRow(segmentsTable, x1, table.getValue(timeColumnName, row), meanHighE)
-			x1 = table.getValue(timeColumnName, row)
+			addSegmentsTableRow(segmentsTable, x1, table.getValue(timeColumn, row), meanHighE)
+			x1 = table.getValue(timeColumn, row)
 		} else if (prevE < threshold && e > threshold) {
 			//low to high switch
-			addSegmentsTableRow(segmentsTable, x1, table.getValue(timeColumnName, row), meanLowE)
-			x1 = table.getValue(timeColumnName, row)
+			addSegmentsTableRow(segmentsTable, x1, table.getValue(timeColumn, row), meanLowE)
+			x1 = table.getValue(timeColumn, row)
 		}
 		prevE = e
 	}
-	molecule.putSegmentsTable(timeColumnName, "E", segmentsTable)
+	molecule.putSegmentsTable(timeColumn, efficiencyColumn, segmentsTable)
 }
 
 def addSegmentsTableRow(def sTable, def rx1, def rx2, def re) {

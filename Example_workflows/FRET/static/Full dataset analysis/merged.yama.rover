@@ -1,14 +1,14 @@
 {
   "window" : {
-    "x" : 0,
-    "y" : 97,
-    "width" : 1369,
-    "height" : 644
+    "x" : 87.0,
+    "y" : 728.0,
+    "width" : 1369.0,
+    "height" : 644.0
   },
-  "DashboardTab" : {
+  "dashboardTab" : {
     "widgets" : [ ]
   },
-  "MetadataTab" : {
+  "metadataTab" : {
     "searchField" : "",
     "marsMetadataSelectionUID" : "fSZBykr2ut",
     "centerPane" : {
@@ -17,7 +17,7 @@
       }
     }
   },
-  "MoleculesTab" : {
+  "moleculesTab" : {
     "searchField" : "DO, Acc",
     "moleculeSelectionUID" : "ctkZYen4S8EbQvjhknkbz7",
     "centerPane" : {
@@ -68,6 +68,6 @@
       }
     }
   },
-  "CommentsTab" : { },
-  "SettingsTab" : { }
+  "commentsTab" : { },
+  "settingsTab" : { }
 }
