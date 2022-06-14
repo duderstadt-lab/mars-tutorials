@@ -42,7 +42,7 @@ label=<html><table><tr><td><p><span style="font-size: 28;">&#10112;</span></p></
 bgcolor=#8e96b0
 icon=noicon
 arg=<macro>
-run("dynamic FRET workflow 1 add molecule tags", "");
+run("FRET workflow 1 add molecule tags", "");
 </macro>
 </line>
 <line>
@@ -51,7 +51,7 @@ label=<html><table><tr><td><p><span style="font-size: 28;">&#10113;</span></p></
 bgcolor=#ab8377
 icon=noicon
 arg=<macro>
-run("dynamic FRET workflow 2 profile correction", "");
+run("FRET workflow 2 profile correction", "");
 </macro>
 </line>
 <line>
@@ -60,34 +60,25 @@ label=<html><table><tr><td><p><span style="font-size: 28;">&#10114;</span></p></
 bgcolor=#b7d1e5
 icon=noicon
 arg=<macro>
-run("dynamic FRET workflow 3 find bleaching positions", "");
+run("FRET workflow 3 find bleaching positions", "");
 </macro>
 </line>
 <line>
 <button> 1 line 8
-label=<html><table><tr><td><p><span style="font-size: 28;">&#10115;</span></p></td><td width=250 align=center><p><span style="font-size:16">alpha delta corrections</span></p></td></tr></table><html>
+label=<html><table><tr><td><p><span style="font-size: 28;">&#10115;</span></p></td><td width=250 align=center><p><span style="font-size:16">alex corrections</span></p></td></tr></table><html>
 bgcolor=#e7de79
 icon=noicon
 arg=<macro>
-run("dynamic FRET workflow 4 alpha delta corrections", "");
+run("FRET workflow 4 alex corrections", "");
 </macro>
 </line>
 <line>
 <button> 1 line 9
-label=<html><table><tr><td><p><span style="font-size: 28;">&#10118;</span></p></td><td width=250 align=center><p><span style="font-size:16">beta gamma corrections</span></p></td></tr></table><html>
-bgcolor=#a3cdad
-icon=noicon
-arg=<macro>
-run("dynamic FRET workflow 5 beta gamma corrections", "");
-</macro>
-</line>
-<line>
-<button> 1 line 10
-label=<html><table><tr><td><p><span style="font-size: 28;">&#10117;</span></p></td><td width=250 align=center><p><span style="font-size:16">two state fit</span></p></td></tr></table><html>
+label=<html><table><tr><td><p><span style="font-size: 28;">&#10118;</span></p></td><td width=250 align=center><p><span style="font-size:16">two state fit</span></p></td></tr></table><html>
 bgcolor=#8c9fb6
 icon=noicon
 arg=<macro>
-run("dynamic FRET workflow 6 two state dwell times", "");
+run("FRET workflow 5 two state dwell times", "");
 </macro>
 </line>
 // end of file
