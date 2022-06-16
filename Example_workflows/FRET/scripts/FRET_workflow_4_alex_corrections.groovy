@@ -227,11 +227,13 @@ def Calc_E_S(String E_name, String S_name, String Iaemdex, String Idemdex, Strin
     		double Idemdex_val = table.getValue(Idemdex,i)
   			double S = (Iaemdex_val + Idemdex_val) / (Iaemdex_val + Idemdex_val + Iaemaex_val)
     		double E = Iaemdex_val / (Iaemdex_val + Idemdex_val)
-    		table.setValue(E_name,i,E)
-    		table.setValue(S_name,i,S)
-    		mol_E += E
-    		mol_S += S
-			mol_obs++
+    		if (!Double.isNaN(S) && !Double.isNaN(E)) {
+	    		table.setValue(E_name,i,E)
+	    		table.setValue(S_name,i,S)
+	    		mol_E += E
+	    		mol_S += S
+					mol_obs++
+    		}
   		}
 
 		if (molecule.hasTag("Accepted") && molecule.hasTag("FRET")) {
