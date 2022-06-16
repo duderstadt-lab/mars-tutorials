@@ -117,6 +117,9 @@ alpha_delta_list = alpha_delta_calculation()
 double alpha = alpha_delta_list[0]
 double delta = alpha_delta_list[1]
 
+builder.addParameter("alpha", alpha)
+builder.addParameter("delta", delta)
+
 //6.B Calculation of FAD ('iiiIaemdex') values corrected for alpha and delta
 if (!headless) archive.getWindow().logln("Calculating FAD ('iiiIaemdex') values corrected for alpha and delta.")
 archive.parallelMolecules().forEach{molecule ->
@@ -146,14 +149,14 @@ archive.parallelMolecules().forEach{molecule ->
 if (!headless) archive.getWindow().logln("Calculating iiiEapp and iiiSapp corrected for alpha and delta.")
 Calc_E_S("iiiEapp", "iiiSapp", "FAD", "iiIdemdex", "iiIaemaex")
 
-builder.addParameter("alpha", alpha)
-builder.addParameter("delta", delta)
-
 //6.D Calculation of the beta and gamma factors
 if (!headless) archive.getWindow().logln("Calculating beta and gamma for " + gammaModel)
 def beta_gamma = (gammaModel.equals("dynamic molecules")) ? dynamic_molecules_beta_gamma_calculation() : static_molecules_beta_gamma_calculation()
 double beta = beta_gamma[0]
 double gamma = beta_gamma[1]
+
+builder.addParameter("beta", beta)
+builder.addParameter("gamma", gamma)
 
 //6.E Calculation of FAA ("iiiIaemaex") and FDD ("iiiIdemdex")
 if (!headless) archive.getWindow().logln("Calculating FAA ('iiiIaemaex') and FDD ('iiiIdemdex')")
@@ -185,8 +188,6 @@ archive.parallelMolecules().forEach{molecule ->
 if (!headless) archive.getWindow().logln("Calculating fully corrected E and S. Building final log.")
 Calc_E_S("E", "S", "FAD", "FDD", "FAA")
 
-builder.addParameter("beta", beta)
-builder.addParameter("gamma", gamma)
 log += builder.buildParameterList()
 log += "\n" + LogBuilder.endBlock(true) + "\n"
 archive.logln(log)
