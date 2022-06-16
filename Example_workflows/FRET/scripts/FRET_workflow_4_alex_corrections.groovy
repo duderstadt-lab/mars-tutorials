@@ -1,5 +1,5 @@
 /*******************************************************************************
- * Copyright (C) 2021, Duderstadt Lab
+ * Copyright (C) 2022, Duderstadt Lab
  * All rights reserved.
  *
  * Redistribution and use in source and binary forms, with or without
@@ -24,7 +24,7 @@
  * ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE
  * POSSIBILITY OF SUCH DAMAGE.
  ******************************************************************************/
-//written by: Nadia M. Huisjes, MSc. (Duderstadt lab)
+//written by: Nadia M. Huisjes, MSc. & Karl E. Duderstadt
 
 //This script accompanies the 'FRET dataset analysis using Mars' example pipeline as described on the mars docs.
 //https://duderstadt-lab.github.io/mars-docs/examples/FRET
