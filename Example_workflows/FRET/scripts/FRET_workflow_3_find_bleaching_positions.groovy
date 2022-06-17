@@ -44,6 +44,7 @@ builder.addParameter("Workflow version", "0.1")
 builder.addParameter("Aem|Aex", aemaex)
 builder.addParameter("Dem|Dex", demdex)
 log += builder.buildParameterList()
+archive.logln(log)
 
 //Make an instance of the Command you want to run
 final SingleChangePointFinder scpCalc = new SingleChangePointFinder()
@@ -84,6 +85,3 @@ scpCalc.run()
 //Add Acceptor_Bleach to AO molecules
 scpCalc.setTags("DO")
 scpCalc.run()
-
-log += "\n" + LogBuilder.endBlock(true) + "\n"
-archive.logln(log)

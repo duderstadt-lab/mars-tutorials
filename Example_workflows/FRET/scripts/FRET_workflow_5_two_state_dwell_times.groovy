@@ -45,6 +45,7 @@ builder.addParameter("Efficiency (E)", efficiencyColumn)
 builder.addParameter("Time (s)", timeColumn)
 builder.addParameter("Efficiency threshold (e.g. 0.5)", threshold)
 log += builder.buildParameterList()
+archive.logln(log)
 
 //First calculate mean populations
 double highE = 0
@@ -109,5 +110,4 @@ def addSegmentsTableRow(def sTable, def rx1, def rx2, def re) {
 	sTable.setValue("B", r, 0)
 	sTable.setValue("Sigma_B", r, 0)
 }
-log += "\n" + LogBuilder.endBlock(true) + "\n"
-archive.logln(log)
+archive.logln(LogBuilder.endBlock(true))

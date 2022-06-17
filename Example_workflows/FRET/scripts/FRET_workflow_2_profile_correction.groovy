@@ -48,6 +48,7 @@ builder.addParameter("Dem|Dex", demdex)
 builder.addParameter("Acceptor excitation profile", acceptor_excitation_profile.getName())
 builder.addParameter("Donor excitation profile", donor_excitation_profile.getName())
 log += builder.buildParameterList()
+archive.logln(log)
 
 int maxAEX = opService.stats().max(acceptor_excitation_profile).getInteger()
 int maxDEX = opService.stats().max(donor_excitation_profile).getInteger()
@@ -68,5 +69,4 @@ archive.molecules().forEach{ molecule ->
 	}
 }
 
-log += "\n" + LogBuilder.endBlock(true) + "\n"
-archive.logln(log)
+archive.logln(LogBuilder.endBlock(true))
