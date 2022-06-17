@@ -31,6 +31,10 @@
 
 #@ MoleculeArchive archive
 
+import de.mpg.biochem.mars.util.*
+
+//Build log message
+builder = new LogBuilder()
 String log = LogBuilder.buildTitleBlock("FRET workflow 1 add molecule tags")
 builder.addParameter("Workflow version", "0.1")
 log += builder.buildParameterList()
