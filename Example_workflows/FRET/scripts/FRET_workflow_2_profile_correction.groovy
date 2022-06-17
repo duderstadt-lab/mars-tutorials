@@ -40,6 +40,7 @@ import net.imglib2.view.Views
 import de.mpg.biochem.mars.util.*
 
 //Build log message
+builder = new LogBuilder()
 String log = LogBuilder.buildTitleBlock("FRET profile correction workflow 2")
 builder.addParameter("Workflow version", "0.1")
 builder.addParameter("Aem|Aex", aemaex)

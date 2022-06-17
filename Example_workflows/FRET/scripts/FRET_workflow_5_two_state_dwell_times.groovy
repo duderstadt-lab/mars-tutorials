@@ -38,6 +38,7 @@ import de.mpg.biochem.mars.table.*
 import de.mpg.biochem.mars.util.*
 
 //Build log message
+builder = new LogBuilder()
 String log = LogBuilder.buildTitleBlock("FRET two state dwell times workflow 5")
 builder.addParameter("Workflow version", "0.1")
 builder.addParameter("Efficiency (E)", efficiencyColumn)
