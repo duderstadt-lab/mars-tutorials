@@ -1,16 +1,22 @@
 {
   "window" : {
-    "x" : 87.0,
-    "y" : 728.0,
-    "width" : 1369.0,
-    "height" : 644.0
+    "x" : 163.0,
+    "y" : 208.0,
+    "width" : 1002.0,
+    "height" : 668.0
   },
   "dashboardTab" : {
-    "widgets" : [ ]
+    "widgets" : [ {
+      "name" : "ArchivePropertiesWidget",
+      "settings" : {
+        "Width" : 270.0,
+        "Height" : 270.0
+      }
+    } ]
   },
   "metadataTab" : {
     "searchField" : "",
-    "marsMetadataSelectionUID" : "fSZBykr2ut",
+    "marsMetadataSelectionUID" : "YjCeexrDbc",
     "centerPane" : {
       "marsMetadataDashboard" : {
         "widgets" : [ ]
@@ -18,8 +24,8 @@
     }
   },
   "moleculesTab" : {
-    "searchField" : "DO, Acc",
-    "moleculeSelectionUID" : "ctkZYen4S8EbQvjhknkbz7",
+    "searchField" : "FRET, Ac",
+    "moleculeSelectionUID" : "gRXbD6gABA9pnWkx2NfBsZ",
     "centerPane" : {
       "plotPane" : {
         "numberSubPlots" : 1,
@@ -33,7 +39,7 @@
             "xColumn" : "T",
             "yColumn" : "0_Profile_Corrected",
             "style" : " ",
-            "color" : "0xf44336ff",
+            "color" : "0xb71c1cff",
             "stroke" : "1.0",
             "showSegments" : false,
             "segmentsColor" : "0xff0000ff",
@@ -44,7 +50,7 @@
             "xColumn" : "T",
             "yColumn" : "1_Green",
             "style" : " ",
-            "color" : "0x3f51b5ff",
+            "color" : "0x1a237eff",
             "stroke" : "1.0",
             "showSegments" : false,
             "segmentsColor" : "0xff0000ff",
@@ -55,7 +61,7 @@
             "xColumn" : "T",
             "yColumn" : "1_Red",
             "style" : " ",
-            "color" : "0x9e9e9eff",
+            "color" : "0xbdbdbdff",
             "stroke" : "1.0",
             "showSegments" : false,
             "segmentsColor" : "0xff0000ff",

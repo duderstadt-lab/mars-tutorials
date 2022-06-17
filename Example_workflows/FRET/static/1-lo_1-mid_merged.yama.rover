@@ -1,34 +1,25 @@
 {
   "window" : {
-    "x" : 0,
-    "y" : 43,
-    "width" : 1804,
-    "height" : 883
+    "x" : 63.0,
+    "y" : 151.0,
+    "width" : 1369.0,
+    "height" : 644.0
   },
-  "DashboardTab" : {
-    "widgets" : [ {
-      "name" : "ArchivePropertiesWidget",
-      "settings" : {
-        "Width" : 270.0,
-        "Height" : 270.0
-      }
-    }, {
-      "name" : "TagFrequencyWidget",
-      "settings" : { }
-    } ]
+  "dashboardTab" : {
+    "widgets" : [ ]
   },
-  "MetadataTab" : {
+  "metadataTab" : {
     "searchField" : "",
-    "marsMetadataSelectionUID" : "qZvMbeejDs",
+    "marsMetadataSelectionUID" : "fSZBykr2ut",
     "centerPane" : {
       "marsMetadataDashboard" : {
         "widgets" : [ ]
       }
     }
   },
-  "MoleculesTab" : {
-    "searchField" : "DO, Ac",
-    "moleculeSelectionUID" : "cnsPscRZMsxVwJbPhfoVGn",
+  "moleculesTab" : {
+    "searchField" : "DO, Acc",
+    "moleculeSelectionUID" : "ctkZYen4S8EbQvjhknkbz7",
     "centerPane" : {
       "plotPane" : {
         "numberSubPlots" : 1,
@@ -42,7 +33,7 @@
             "xColumn" : "T",
             "yColumn" : "0_Profile_Corrected",
             "style" : " ",
-            "color" : "0xb71c1cff",
+            "color" : "0xf44336ff",
             "stroke" : "1.0",
             "showSegments" : false,
             "segmentsColor" : "0xff0000ff",
@@ -53,7 +44,7 @@
             "xColumn" : "T",
             "yColumn" : "1_Green",
             "style" : " ",
-            "color" : "0x1a237eff",
+            "color" : "0x3f51b5ff",
             "stroke" : "1.0",
             "showSegments" : false,
             "segmentsColor" : "0xff0000ff",
@@ -64,7 +55,7 @@
             "xColumn" : "T",
             "yColumn" : "1_Red",
             "style" : " ",
-            "color" : "0xbdbdbdff",
+            "color" : "0x9e9e9eff",
             "stroke" : "1.0",
             "showSegments" : false,
             "segmentsColor" : "0xff0000ff",
@@ -77,6 +68,6 @@
       }
     }
   },
-  "CommentsTab" : { },
-  "SettingsTab" : { }
+  "commentsTab" : { },
+  "settingsTab" : { }
 }
