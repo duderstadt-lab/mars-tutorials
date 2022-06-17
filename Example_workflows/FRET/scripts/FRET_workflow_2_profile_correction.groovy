@@ -41,7 +41,7 @@ import de.mpg.biochem.mars.util.*
 
 //Build log message
 builder = new LogBuilder()
-String log = LogBuilder.buildTitleBlock("FRET profile correction workflow 2")
+String log = LogBuilder.buildTitleBlock("FRET workflow 2 profile correction")
 builder.addParameter("Workflow version", "0.1")
 builder.addParameter("Aem|Aex", aemaex)
 builder.addParameter("Dem|Dex", demdex)

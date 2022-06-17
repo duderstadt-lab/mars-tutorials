@@ -31,8 +31,15 @@
 
 #@ MoleculeArchive archive
 
+String log = LogBuilder.buildTitleBlock("FRET workflow 1 add molecule tags")
+builder.addParameter("Workflow version", "0.1")
+log += builder.buildParameterList()
+
 archive.molecules().forEach{ molecule ->
 	archive.getMetadata(molecule.getMetadataUID()).getTags().forEach{ tag ->
 		molecule.addTag(tag)
 	}
 }
+
+log += "\n" + LogBuilder.endBlock(true) + "\n"
+archive.logln(log)
