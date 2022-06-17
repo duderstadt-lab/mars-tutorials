@@ -66,6 +66,11 @@ builder.addParameter("Workflow version", "0.1")
 builder.addParameter("Accepted DO", DO_tag_count)
 builder.addParameter("Accepted AO", AO_tag_count)
 builder.addParameter("Accepted FRET", FRET_tag_count)
+builder.addParameter("Aem|Aex", aemaexName)
+builder.addParameter("Aem|Dex", aemdexName)
+builder.addParameter("Dem|Dex", demdexName)
+builder.addParameter("Gamma model", gammaModel)
+builder.addParameter("Dynamic efficiency threshold", gammaEfficiencyThreshold)
 
 //Provide live feedback on processing in the window
 if (!headless) archive.getWindow().logln("Running FRET alex corrections workflow version 0.1")
@@ -357,10 +362,10 @@ def dynamic_molecules_beta_gamma_calculation() {
 		}
 		iiiSappHigh = iiiSappHigh/countHigh
 		iiiEappHigh = iiiEappHigh/countHigh
-		regression.addData(iiiEappHigh,1/iiiSappHigh)
+		if (!Double.isNaN(iiiSappHigh) && !Double.isNaN(iiiEappHigh)) regression.addData(iiiEappHigh,1/iiiSappHigh)
 		iiiSappLow = iiiSappLow/countLow
 		iiiEappLow = iiiEappLow/countLow
-		regression.addData(iiiEappLow,1/iiiSappLow)
+		if (!Double.isNaN(iiiSappLow) && !Double.isNaN(iiiEappLow)) regression.addData(iiiEappLow,1/iiiSappLow)
 	}
 
 	//save the regression outputs
