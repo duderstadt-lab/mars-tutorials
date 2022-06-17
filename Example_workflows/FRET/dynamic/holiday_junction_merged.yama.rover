@@ -1,0 +1,106 @@
+{
+  "window" : {
+    "x" : 123.0,
+    "y" : 136.0,
+    "width" : 1117.0,
+    "height" : 641.0
+  },
+  "dashboardTab" : {
+    "widgets" : [ {
+      "name" : "ArchivePropertiesWidget",
+      "settings" : {
+        "Width" : 270.0,
+        "Height" : 270.0
+      }
+    } ]
+  },
+  "metadataTab" : {
+    "searchField" : "",
+    "marsMetadataSelectionUID" : "7qysLKEvbC",
+    "centerPane" : {
+      "marsMetadataDashboard" : {
+        "widgets" : [ ]
+      }
+    }
+  },
+  "moleculesTab" : {
+    "searchField" : "FRET, Accepted, figure",
+    "moleculeSelectionUID" : "guKLc61amP4qq3dqi8VuVw",
+    "centerPane" : {
+      "plotPane" : {
+        "numberSubPlots" : 2,
+        "subPlots" : [ {
+          "xAxisName" : "T",
+          "yAxisName" : "Intensity",
+          "indicators" : "Molecules",
+          "plotSeries" : [ {
+            "track" : true,
+            "type" : "Line",
+            "xColumn" : "T",
+            "yColumn" : "637_Red",
+            "style" : " ",
+            "color" : "0xf44336ff",
+            "stroke" : "1.0",
+            "showSegments" : false,
+            "segmentsColor" : "0xff0000ff",
+            "segmentsStroke" : "1.0"
+          }, {
+            "track" : false,
+            "type" : "Line",
+            "xColumn" : "T",
+            "yColumn" : "532_Green",
+            "style" : " ",
+            "color" : "0x3f51b5ff",
+            "stroke" : "1",
+            "showSegments" : false,
+            "segmentsColor" : "0xff0000ff",
+            "segmentsStroke" : "1.0"
+          }, {
+            "track" : false,
+            "type" : "Line",
+            "xColumn" : "T",
+            "yColumn" : "532_Red",
+            "style" : " ",
+            "color" : "0x757575ff",
+            "stroke" : "1",
+            "showSegments" : false,
+            "segmentsColor" : "0xff0000ff",
+            "segmentsStroke" : "1.0"
+          } ]
+        }, {
+          "xAxisName" : "T",
+          "yAxisName" : "Intensity",
+          "indicators" : "Molecules",
+          "plotSeries" : [ {
+            "track" : true,
+            "type" : "Line",
+            "xColumn" : "T",
+            "yColumn" : "FDD",
+            "style" : " ",
+            "color" : "0x2196f3ff",
+            "stroke" : "1.0",
+            "showSegments" : false,
+            "segmentsColor" : "0xff0000ff",
+            "segmentsStroke" : "1.0"
+          }, {
+            "track" : false,
+            "type" : "Line",
+            "xColumn" : "T",
+            "yColumn" : "FAD",
+            "style" : " ",
+            "color" : "0x757575ff",
+            "stroke" : "1.0",
+            "showSegments" : false,
+            "segmentsColor" : "0xff0000ff",
+            "segmentsStroke" : "1.0"
+          } ]
+        } ]
+      },
+      "moleculeDashboard" : {
+        "widgets" : [ ]
+      }
+    }
+  },
+  "commentsTab" : { },
+  "settingsTab" : { }
+}
