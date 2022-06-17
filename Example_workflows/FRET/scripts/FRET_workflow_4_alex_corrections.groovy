@@ -61,7 +61,7 @@ archive.molecules().filter{ molecule -> molecule.hasTag("Accepted")}.forEach{ mo
 }
 
 //Build log message
-String log = LogBuilder.buildTitleBlock("FRET alex corrections workflow")
+String log = LogBuilder.buildTitleBlock("FRET alex corrections workflow 4")
 builder.addParameter("Workflow version", "0.1")
 builder.addParameter("Accepted DO", DO_tag_count)
 builder.addParameter("Accepted AO", AO_tag_count)

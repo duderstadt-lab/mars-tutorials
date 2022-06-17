@@ -37,6 +37,16 @@
 #@ OpService opService
 
 import net.imglib2.view.Views
+import de.mpg.biochem.mars.util.*
+
+//Build log message
+String log = LogBuilder.buildTitleBlock("FRET profile correction workflow 2")
+builder.addParameter("Workflow version", "0.1")
+builder.addParameter("Aem|Aex", aemaex)
+builder.addParameter("Dem|Dex", demdex)
+builder.addParameter("Acceptor excitation profile", acceptor_excitation_profile.getName())
+builder.addParameter("Donor excitation profile", donor_excitation_profile.getName())
+log += builder.buildParameterList()
 
 int maxAEX = opService.stats().max(acceptor_excitation_profile).getInteger()
 int maxDEX = opService.stats().max(donor_excitation_profile).getInteger()
@@ -56,3 +66,6 @@ archive.molecules().forEach{ molecule ->
 		row.setValue(aemaex + "_Profile_Corrected", aex_corr)
 	}
 }
+
+log += "\n" + LogBuilder.endBlock(true) + "\n"
+archive.logln(log)
