@@ -29,8 +29,8 @@
 //This script accompanies the 'FRET dataset analysis using Mars' example pipeline as described on the mars docs.
 //https://duderstadt-lab.github.io/mars-docs/examples/FRET
 
-#@ String (label="Aem|Aex (format: channel_region)", value="637_Red") aemaex
-#@ String (label="Dem|Dex (format: channel_region)", value="532_Green") demdex
+#@ String (label="Acceptor column (format: channel_region)", value="637_Red") acceptorColumn
+#@ String (label="Donor column (format: channel_region)", value="532_Green") donorColumn
 #@ MoleculeArchive archive
 #@ ImageJ ij
 
@@ -40,9 +40,9 @@ import de.mpg.biochem.mars.util.*
 //Build log message
 builder = new LogBuilder()
 String log = LogBuilder.buildTitleBlock("FRET workflow 3 find bleaching positions")
-builder.addParameter("Workflow version", "0.1")
-builder.addParameter("Aem|Aex", aemaex)
-builder.addParameter("Dem|Dex", demdex)
+builder.addParameter("Workflow version", "0.2")
+builder.addParameter("Acceptor column", acceptorColumn)
+builder.addParameter("Donor column", donorColumn)
 log += builder.buildParameterList()
 archive.logln(log)
 
@@ -68,7 +68,7 @@ scpCalc.setAddSegmentsTable(false)
 
 //Add Acceptor_Bleach to FRET molecules
 scpCalc.setPosition("Acceptor_Bleach")
-scpCalc.setYColumn(aemaex)
+scpCalc.setYColumn(acceptorColumn)
 scpCalc.setTags("FRET")
 scpCalc.run()
 
@@ -78,7 +78,7 @@ scpCalc.run()
 
 //Add Donor_Bleach to FRET molecules
 scpCalc.setPosition("Donor_Bleach")
-scpCalc.setYColumn(demdex)
+scpCalc.setYColumn(donorColumn)
 scpCalc.setTags("FRET")
 scpCalc.run()
 
