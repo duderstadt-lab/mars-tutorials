@@ -1,9 +1,9 @@
 {
   "window" : {
-    "x" : 63.0,
-    "y" : 151.0,
-    "width" : 1369.0,
-    "height" : 644.0
+    "x" : 287.0,
+    "y" : 226.0,
+    "width" : 1254.0,
+    "height" : 811.0
   },
   "dashboardTab" : {
     "widgets" : [ ]
@@ -18,20 +18,20 @@
     }
   },
   "moleculesTab" : {
-    "searchField" : "DO, Acc",
-    "moleculeSelectionUID" : "ctkZYen4S8EbQvjhknkbz7",
+    "searchField" : "",
+    "moleculeSelectionUID" : "26sE5vtK9rEWTJNoSaRSYU",
     "centerPane" : {
       "plotPane" : {
         "numberSubPlots" : 1,
         "subPlots" : [ {
           "xAxisName" : "T",
-          "yAxisName" : "0_Profile_Corrected",
+          "yAxisName" : "0_Red_Profile_Corrected",
           "indicators" : "Molecules",
           "plotSeries" : [ {
             "track" : true,
             "type" : "Line",
             "xColumn" : "T",
-            "yColumn" : "0_Profile_Corrected",
+            "yColumn" : "0_Red_Profile_Corrected",
             "style" : " ",
             "color" : "0xf44336ff",
             "stroke" : "1.0",
