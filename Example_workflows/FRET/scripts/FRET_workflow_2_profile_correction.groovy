@@ -35,9 +35,11 @@
 #@ ImgPlus (label="Donor excitation profile") donor_excitation_profile
 #@ MoleculeArchive archive
 #@ OpService opService
+#@ UIService uiService
 
 import net.imglib2.view.Views
 import de.mpg.biochem.mars.util.*
+import org.scijava.ui.DialogPrompt
 
 //Build log message
 builder = new LogBuilder()
@@ -56,7 +58,20 @@ int maxDEX = opService.stats().max(donor_excitation_profile).getInteger()
 def aex_iMap_ra = Views.extendMirrorSingle(acceptor_excitation_profile).randomAccess()
 def dex_iMap_ra = Views.extendMirrorSingle(donor_excitation_profile).randomAccess()
 
+boolean foundBadRecord = false
 archive.molecules().forEach{ molecule ->
+	if (foundBadRecord) return
+	if (!molecule.getTable().hasColumn(aemaex) ||
+		!molecule.getTable().hasColumn(aemaex + "_X") ||
+		!molecule.getTable().hasColumn(aemaex + "_Y") ||
+		!molecule.getTable().hasColumn(demdex + "_X") ||
+		!molecule.getTable().hasColumn(demdex + "_Y")) {
+			uiService.showDialog("The molecule record " + molecule.getUID() + " is missing the Aem|Aex or Dem|Dex columns specified. This can occur when the \n" +
+			                     "Molecule Integrator (multiview) is run with the wrong video selected. For example, when the Z projection video is used. Aborting.\n", DialogPrompt.MessageType.ERROR_MESSAGE);
+		foundBadRecord = true
+		return
+	}		
+
 	molecule.getTable().rows().forEach{ row ->
 		double aex = row.getValue(aemaex)
 		int aex_x = (int) row.getValue(aemaex + "_X")
