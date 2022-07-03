@@ -33,9 +33,21 @@
 #@ String (label="Time (s)", value="532_Green_Time_(s)") timeColumn
 #@ Double (label="Efficiency threshold (e.g. 0.5)", value = 0.4) threshold
 #@ MoleculeArchive archive
+#@ UIService uiService
 
 import de.mpg.biochem.mars.table.*
 import de.mpg.biochem.mars.util.*
+import org.scijava.ui.DialogPrompt
+
+//Check that the tables of all FRET & Accepted molecule records have the columns specified
+boolean foundBadRecord = false
+archive.molecules().filter{ m -> m.hasTag("FRET") && m.hasTag("Accepted")}\
+	.filter{molecule -> !molecule.getTable().hasColumn(efficiencyColumn) || !molecule.getTable().hasColumn(timeColumn)}\
+	.findFirst().ifPresent{molecule ->
+		uiService.showDialog("The molecule record " + molecule.getUID() + " is missing the Efficiency (E) or Time (s) column specified. Aborting.\n", DialogPrompt.MessageType.ERROR_MESSAGE);
+		foundBadRecord = true
+}
+if (foundBadRecord) return
 
 //Build log message
 builder = new LogBuilder()

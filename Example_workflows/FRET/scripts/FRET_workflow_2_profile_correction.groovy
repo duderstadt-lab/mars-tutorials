@@ -41,6 +41,18 @@ import net.imglib2.view.Views
 import de.mpg.biochem.mars.util.*
 import org.scijava.ui.DialogPrompt
 
+//Check that the tables of all molecule records have the columns specified
+boolean foundBadRecord = false
+archive.molecules().filter{molecule -> !molecule.getTable().hasColumn(aemaex) ||
+	!molecule.getTable().hasColumn(aemaex + "_X") || !molecule.getTable().hasColumn(aemaex + "_Y") ||
+	!molecule.getTable().hasColumn(demdex + "_X") || !molecule.getTable().hasColumn(demdex + "_Y")}\
+	.findFirst().ifPresent{molecule ->
+		uiService.showDialog("The molecule record " + molecule.getUID() + " is missing the Aem|Aex or Dem|Dex columns specified. This can occur when the \n" +
+												 "Molecule Integrator (multiview) is run with the wrong video selected. For example, when the Z projection video is used. Aborting.\n", DialogPrompt.MessageType.ERROR_MESSAGE);
+		foundBadRecord = true
+}
+if (foundBadRecord) return
+
 //Build log message
 builder = new LogBuilder()
 String log = LogBuilder.buildTitleBlock("FRET workflow 2 profile correction")
@@ -58,21 +70,8 @@ int maxDEX = opService.stats().max(donor_excitation_profile).getInteger()
 def aex_iMap_ra = Views.extendMirrorSingle(acceptor_excitation_profile).randomAccess()
 def dex_iMap_ra = Views.extendMirrorSingle(donor_excitation_profile).randomAccess()
 
-boolean foundBadRecord = false
-archive.molecules().forEach{ molecule ->
-	if (foundBadRecord) return
-	if (!molecule.getTable().hasColumn(aemaex) ||
-		!molecule.getTable().hasColumn(aemaex + "_X") ||
-		!molecule.getTable().hasColumn(aemaex + "_Y") ||
-		!molecule.getTable().hasColumn(demdex + "_X") ||
-		!molecule.getTable().hasColumn(demdex + "_Y")) {
-			uiService.showDialog("The molecule record " + molecule.getUID() + " is missing the Aem|Aex or Dem|Dex columns specified. This can occur when the \n" +
-			                     "Molecule Integrator (multiview) is run with the wrong video selected. For example, when the Z projection video is used. Aborting.\n", DialogPrompt.MessageType.ERROR_MESSAGE);
-		foundBadRecord = true
-		return
-	}		
-
-	molecule.getTable().rows().forEach{ row ->
+archive.molecules().map{m -> m.getTable()}.forEach{ table ->
+	table.rows().forEach{ row ->
 		double aex = row.getValue(aemaex)
 		int aex_x = (int) row.getValue(aemaex + "_X")
 		int aex_y = (int) row.getValue(aemaex + "_Y")

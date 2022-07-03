@@ -33,9 +33,20 @@
 #@ String (label="Donor column (format: channel_region)", value="532_Green") donorColumn
 #@ MoleculeArchive archive
 #@ ImageJ ij
+#@ UIService uiService
 
 import de.mpg.biochem.mars.kcp.commands.*
 import de.mpg.biochem.mars.util.*
+import org.scijava.ui.DialogPrompt
+
+//Check that the tables of all molecule records have the columns specified
+boolean foundBadRecord = false
+archive.molecules().filter{molecule -> !molecule.getTable().hasColumn(acceptorColumn) || !molecule.getTable().hasColumn(donorColumn)}\
+	.findFirst().ifPresent{molecule ->
+		uiService.showDialog("The molecule record " + molecule.getUID() + " is missing the Acceptor or Donor column specified. Aborting.\n", DialogPrompt.MessageType.ERROR_MESSAGE);
+		foundBadRecord = true
+}
+if (foundBadRecord) return
 
 //Build log message
 builder = new LogBuilder()

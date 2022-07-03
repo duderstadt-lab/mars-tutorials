@@ -35,6 +35,7 @@
 #@ String (label="Gamma model", choices={"static molecules", "dynamic molecules"}, value="dynamic molecules", style="radioButtonVertical") gammaModel
 #@ Double (label="Dynamic efficiency threshold", value = 0.4) gammaEfficiencyThreshold
 #@ MoleculeArchive archive
+#@ UIService uiService
 
 headless = (archive.getWindow() == null) ? true : false
 
@@ -45,7 +46,17 @@ import de.mpg.biochem.mars.util.*
 import org.scijava.table.*
 import groovy.lang.*
 import de.mpg.biochem.mars.kcp.commands.*
+import org.scijava.ui.DialogPrompt
 import org.apache.commons.math3.stat.regression.SimpleRegression
+
+//Check that the tables of all molecule records have the columns specified
+boolean foundBadRecord = false
+archive.molecules().filter{molecule -> !molecule.getTable().hasColumn(aemaexName) || !molecule.getTable().hasColumn(aemdexName) || !molecule.getTable().hasColumn(demdexName)}\
+	.findFirst().ifPresent{molecule ->
+		uiService.showDialog("The molecule record " + molecule.getUID() + " is missing the Aem|Aex, Aem|Dex or Dem|Dex column specified. Aborting.\n", DialogPrompt.MessageType.ERROR_MESSAGE);
+		foundBadRecord = true
+}
+if (foundBadRecord) return
 
 builder = new LogBuilder()
 int DO_tag_count = 0
