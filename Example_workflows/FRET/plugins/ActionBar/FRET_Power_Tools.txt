@@ -81,4 +81,13 @@ arg=<macro>
 run("FRET workflow 5 two state dwell times", "");
 </macro>
 </line>
+<line>
+<button> 1 line 10
+label=<html><table><tr><td><p><span style="font-size: 28;">&#10116;</span></p></td><td width=250 align=center><p><span style="font-size:16">corrections without aex</span></p></td></tr></table><html>
+bgcolor=#cdbdd6
+icon=noicon
+arg=<macro>
+run("FRET workflow 6 corrections without aex", "");
+</macro>
+</line>
 // end of file
