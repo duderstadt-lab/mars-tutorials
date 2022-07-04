@@ -2,6 +2,15 @@
 
 <line>
 <button> 1 line 1
+label=<html><p style="font-size:16">Beam Profile Corrector</p><html>
+bgcolor=#ccbeba
+icon=noicon
+arg=<macro>
+run("Beam Profile Corrector", "");
+</macro>
+</line>
+<line>
+<button> 1 line 2
 label=<html><p style="font-size:16">Peak Finder</p><html>
 bgcolor=#f2eabd
 icon=noicon
@@ -10,7 +19,7 @@ run("Peak Finder", "");
 </macro>
 </line>
 <line>
-<button> 1 line 2
+<button> 1 line 3
 label=<html><p style="font-size:16">Transform ROIs</p><html>
 bgcolor=#eeba83
 icon=noicon
@@ -19,7 +28,7 @@ run("Transform ROIs", "");
 </macro>
 </line>
 <line>
-<button> 1 line 3
+<button> 1 line 4
 label=<html><p style="font-size:16">Molecule Integrator (multiview)</p><html>
 bgcolor=#e09589
 icon=noicon
@@ -28,7 +37,7 @@ run("Molecule Integrator (multiview)", "");
 </macro>
 </line>
 <line>
-<button> 1 line 4
+<button> 1 line 5
 label=<html><p style="font-size:16">Merge Archives</p><html>
 bgcolor=#a4aaa2
 icon=noicon
@@ -37,7 +46,7 @@ run("Merge Archives", "");
 </macro>
 </line>
 <line>
-<button> 1 line 5
+<button> 1 line 6
 label=<html><table><tr><td><p><span style="font-size: 28;">&#10112;</span></p></td><td width=250 align=center><p><span style="font-size:16">add molecule tags</span></p></td></tr></table><html>
 bgcolor=#8e96b0
 icon=noicon
@@ -46,7 +55,7 @@ run("FRET workflow 1 add molecule tags", "");
 </macro>
 </line>
 <line>
-<button> 1 line 6
+<button> 1 line 7
 label=<html><table><tr><td><p><span style="font-size: 28;">&#10113;</span></p></td><td width=250 align=center><p><span style="font-size:16">profile correction</span></p></td></tr></table><html>
 bgcolor=#ab8377
 icon=noicon
@@ -55,7 +64,7 @@ run("FRET workflow 2 profile correction", "");
 </macro>
 </line>
 <line>
-<button> 1 line 7
+<button> 1 line 8
 label=<html><table><tr><td><p><span style="font-size: 28;">&#10114;</span></p></td><td width=250 align=center><p><span style="font-size:16">find bleaching positions</span></p></td></tr></table><html>
 bgcolor=#b7d1e5
 icon=noicon
@@ -64,7 +73,7 @@ run("FRET workflow 3 find bleaching positions", "");
 </macro>
 </line>
 <line>
-<button> 1 line 8
+<button> 1 line 9
 label=<html><table><tr><td><p><span style="font-size: 28;">&#10115;</span></p></td><td width=250 align=center><p><span style="font-size:16">alex corrections</span></p></td></tr></table><html>
 bgcolor=#e7de79
 icon=noicon
@@ -73,7 +82,7 @@ run("FRET workflow 4 alex corrections", "");
 </macro>
 </line>
 <line>
-<button> 1 line 9
+<button> 1 line 10
 label=<html><table><tr><td><p><span style="font-size: 28;">&#10116;</span></p></td><td width=250 align=center><p><span style="font-size:16">two state fit</span></p></td></tr></table><html>
 bgcolor=#a3cdad
 icon=noicon
@@ -82,7 +91,7 @@ run("FRET workflow 5 two state dwell times", "");
 </macro>
 </line>
 <line>
-<button> 1 line 10
+<button> 1 line 11
 label=<html><table><tr><td><p><span style="font-size: 28;">&#10116;</span></p></td><td width=250 align=center><p><span style="font-size:16">corrections without aex</span></p></td></tr></table><html>
 bgcolor=#cdbdd6
 icon=noicon
