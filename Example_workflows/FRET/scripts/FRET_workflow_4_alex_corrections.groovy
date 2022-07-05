@@ -140,11 +140,11 @@ builder.addParameter("delta", delta)
 if (!headless) archive.getWindow().logln("Calculating FAD ('iiiIaemdex') values corrected for alpha and delta.")
 archive.parallelMolecules().forEach{molecule ->
     molecule.getTable().rows().forEach{ row ->
-			double Iaemaex = row.getValue("iiIaemaex")
-			double Iaemdex = row.getValue("iiIaemdex")
-			double Idemdex = row.getValue("iiIdemdex")
-			double FAD = Iaemdex - alpha * Idemdex - delta * Iaemaex
-		  row.setValue("FAD", FAD)
+		double Iaemaex = row.getValue("iiIaemaex")
+		double Iaemdex = row.getValue("iiIaemdex")
+		double Idemdex = row.getValue("iiIdemdex")
+		double FAD = Iaemdex - alpha * Idemdex - delta * Iaemaex
+		row.setValue("FAD", FAD)
     }
 }
 
@@ -165,25 +165,26 @@ builder.addParameter("gamma", gamma)
 if (!headless) archive.getWindow().logln("Calculating FAA ('iiiIaemaex') and FDD ('iiiIdemdex')")
 archive.parallelMolecules().forEach{molecule ->
     molecule.getTable().rows().forEach{ row ->
-			double Iaemaex = row.getValue("iiIaemaex")
-			double Idemdex = row.getValue("iiIdemdex")
-			double FDD = gamma * Idemdex
-			double FAA = Iaemaex / beta
-			row.setValue("FDD",FDD)
-			row.setValue("FAA",FAA)
+		double Iaemaex = row.getValue("iiIaemaex")
+		double Idemdex = row.getValue("iiIdemdex")
+		double FDD = gamma * Idemdex
+		double FAA = Iaemaex / beta
+		row.setValue("FDD",FDD)
+		row.setValue("FAA",FAA)
     }
 }
 
 //Calculating SUM_Dex (FAD+FDD) and SUM_signal (FAA+FAD+FDD)
 if (!headless) archive.getWindow().logln("Calculating SUM_Dex (FAD+FDD) and SUM_signal (FAA+FAD+FDD)")
-archive.parallelMolecules().forEach{molecule ->
-    molecule.getTable().rows().forEach{ row ->
-			double FDD = row.getValue("FDD")
-			double FAA = row.getValue("FAA")
-			double FAD = row.getValue("FAD")
-			row.setValue("SUM_Dex",FAD+FDD)
-			row.setValue("SUM_signal",FAA+FAD+FDD)
-    }
+archive.parallelMolecules().forEach{molecule -> 
+	MarsTable table = molecule.getTable()
+	for (int row=0; row < table.getRowCount(); row++) {
+		double FDD = table.getValue("FDD", row)
+		double FAA = table.getValue("FAA", row)
+		double FAD = table.getValue("FAD", row)
+		table.setValue("SUM_Dex",row, FAD+FDD)
+		table.setValue("SUM_signal",row, FAA+FAD+FDD)
+	}
 }
 
 //6.F Calculation of the fully corrected S and E values
