@@ -141,6 +141,16 @@ archive.parallelMolecules().forEach{molecule ->
     }
 }
 
+//Calculating SUM_Dex (FAD+FDD) and SUM_signal (FAA+FAD+FDD)
+if (!headless) archive.getWindow().logln("Calculating SUM_Dex (FAD+FDD)")
+archive.parallelMolecules().forEach{molecule ->
+    molecule.getTable().rows().forEach{ row ->
+			double FDD = row.getValue("FDD")
+			double FAD = row.getValue("FAD")
+			row.setValue("SUM_Dex",FAD+FDD)
+    }
+}
+
 //6.F Calculation of the fully corrected S and E values
 if (!headless) archive.getWindow().logln("Calculating fully corrected E. Building final log.")
 Calc_E_S("E", "FAD", "FDD")
@@ -187,13 +197,13 @@ def Calc_E_S(String E_name, String Iaemdex, String Idemdex) {
   		}
 
 		if (molecule.hasTag("Accepted") && molecule.hasTag("FRET")) {
-  			global_E += mol_E
-  			global_count += mol_obs
+  			global_E += mol_E / mol_obs
+  			global_count++
 		}
 
 		molecule.setParameter(E_name, mol_E / mol_obs)
-  	}
-  	builder.addParameter(E_name, global_E / global_count)
+  }
+  builder.addParameter(E_name, global_E / global_count)
 }
 
 def alpha_calculation() {

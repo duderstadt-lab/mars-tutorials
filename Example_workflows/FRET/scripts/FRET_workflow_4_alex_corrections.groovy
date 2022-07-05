@@ -139,25 +139,12 @@ builder.addParameter("delta", delta)
 //6.B Calculation of FAD ('iiiIaemdex') values corrected for alpha and delta
 if (!headless) archive.getWindow().logln("Calculating FAD ('iiiIaemdex') values corrected for alpha and delta.")
 archive.parallelMolecules().forEach{molecule ->
-    MarsTable table = molecule.getTable()
-    double endT = 0
-	if (molecule.hasTag("DO"))
-		endT = molecule.getPosition("Donor_Bleach").getPosition()
-	else if (molecule.hasTag("AO"))
-		endT = molecule.getPosition("Acceptor_Bleach").getPosition()
-	else if (molecule.hasTag("FRET"))
-		endT = getTendFRET(molecule)
-
-    double len = table.getRowCount()
-	for (int i=0; i<endT; i++){
-		double Iaemaex = table.getValue("iiIaemaex",i)
-		double Iaemdex = table.getValue("iiIaemdex",i)
-		double Idemdex = table.getValue("iiIdemdex",i)
-		double FAD = Iaemdex - alpha * Idemdex - delta * Iaemaex
-		table.setValue("FAD",i,FAD)
-  	}
-  	for (int i=endT; i<len; i++){
-  		table.setValue("FAD",i,"NaN")
+    molecule.getTable().rows().forEach{ row ->
+			double Iaemaex = row.getValue("iiIaemaex")
+			double Iaemdex = row.getValue("iiIaemdex")
+			double Idemdex = row.getValue("iiIdemdex")
+			double FAD = Iaemdex - alpha * Idemdex - delta * Iaemaex
+		  row.setValue("FAD", FAD)
     }
 }
 
@@ -177,27 +164,26 @@ builder.addParameter("gamma", gamma)
 //6.E Calculation of FAA ("iiiIaemaex") and FDD ("iiiIdemdex")
 if (!headless) archive.getWindow().logln("Calculating FAA ('iiiIaemaex') and FDD ('iiiIdemdex')")
 archive.parallelMolecules().forEach{molecule ->
-    MarsTable table = molecule.getTable()
-    double Tendfret = 0
-  		if (molecule.hasTag("DO"))
-  			Tendfret = molecule.getPosition("Donor_Bleach").getPosition()
-		else if (molecule.hasTag("AO"))
-			Tendfret = molecule.getPosition("Acceptor_Bleach").getPosition()
-		else if (molecule.hasTag("FRET"))
-			Tendfret = getTendFRET(molecule)
-    double len = table.getRowCount()
-	for (int i=0; i<Tendfret; i++){
-		double Iaemaex = table.getValue("iiIaemaex",i)
-		double Idemdex = table.getValue("iiIdemdex",i)
-		double FDD = gamma * Idemdex
-		double FAA = Iaemaex / beta
-		table.setValue("FDD",i,FDD)
-		table.setValue("FAA",i,FAA)
-	}
-	for (int i=Tendfret; i<len; i++){
-		table.setValue("FDD",i,"NaN")
-		table.setValue("FAA",i,"NaN")
-	}
+    molecule.getTable().rows().forEach{ row ->
+			double Iaemaex = row.getValue("iiIaemaex")
+			double Idemdex = row.getValue("iiIdemdex")
+			double FDD = gamma * Idemdex
+			double FAA = Iaemaex / beta
+			row.setValue("FDD",FDD)
+			row.setValue("FAA",FAA)
+    }
+}
+
+//Calculating SUM_Dex (FAD+FDD) and SUM_signal (FAA+FAD+FDD)
+if (!headless) archive.getWindow().logln("Calculating SUM_Dex (FAD+FDD) and SUM_signal (FAA+FAD+FDD)")
+archive.parallelMolecules().forEach{molecule ->
+    molecule.getTable().rows().forEach{ row ->
+			double FDD = row.getValue("FDD")
+			double FAA = row.getValue("FAA")
+			double FAD = row.getValue("FAD")
+			row.setValue("SUM_Dex",FAD+FDD)
+			row.setValue("SUM_signal",FAA+FAD+FDD)
+    }
 }
 
 //6.F Calculation of the fully corrected S and E values
