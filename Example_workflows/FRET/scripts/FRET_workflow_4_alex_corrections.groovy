@@ -176,7 +176,7 @@ archive.parallelMolecules().forEach{molecule ->
 
 //Calculating SUM_Dex (FAD+FDD) and SUM_signal (FAA+FAD+FDD)
 if (!headless) archive.getWindow().logln("Calculating SUM_Dex (FAD+FDD) and SUM_signal (FAA+FAD+FDD)")
-archive.parallelMolecules().forEach{molecule -> 
+archive.parallelMolecules().forEach{molecule ->
 	MarsTable table = molecule.getTable()
 	for (int row=0; row < table.getRowCount(); row++) {
 		double FDD = table.getValue("FDD", row)
@@ -294,6 +294,10 @@ def alpha_delta_calculation() {
 
 	double alpha = E_stat/(1-E_stat)
 	double delta = S_stat/(1-S_stat)
+
+	//Negative values are not possible. If negative we set to zero
+	if (alpha < 0) alpha = 0
+	if (delta < 0) delta = 0
 
 	archive.metadata().forEach{metadata ->
 		metadata.setParameter("iiEappDO_mean", E_stat)

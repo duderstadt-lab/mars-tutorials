@@ -227,7 +227,9 @@ def alpha_calculation() {
 	}
 	E_stat = E_stat / observations
 
+	//Negative values are not possible. If negative we set to zero
 	double alpha = E_stat/(1-E_stat)
+	if (alpha < 0) alpha = 0
 
 	archive.metadata().forEach{metadata ->
 		metadata.setParameter("iiEappDO_mean", E_stat)
@@ -237,6 +239,9 @@ def alpha_calculation() {
 	return alpha
 }
 
+//Only FRET traces where the donor survives more than 25 time points after acceptor bleaching
+//are used for the gamma calculation.
+//Only gamma values from individual molecules between 0 and 5 are used to determine the global gamma value
 def gamma_calculation() {
 	DoubleColumn gammas = new DoubleColumn("gamma")
 
