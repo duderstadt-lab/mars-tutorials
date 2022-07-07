@@ -45,6 +45,8 @@ import groovy.lang.*
 import de.mpg.biochem.mars.kcp.commands.*
 import org.scijava.ui.DialogPrompt
 import org.apache.commons.math3.stat.regression.SimpleRegression
+import org.apache.commons.math3.fitting.GaussianCurveFitter
+import org.apache.commons.math3.fitting.WeightedObservedPoints
 
 //Check that the tables of all molecule records have the columns specified
 boolean foundBadRecord = false
@@ -243,7 +245,21 @@ def alpha_calculation() {
 //are used for the gamma calculation.
 //Only gamma values from individual molecules between 0 and 5 are used to determine the global gamma value
 def gamma_calculation() {
-	DoubleColumn gammas = new DoubleColumn("gamma")
+	//No great histogram function in groovy so we do it outselves :(
+	//We calculate the sqrt of the observations for the bin count in the histogram
+	int bins = (int)Math.sqrt(archive.molecules().filter{ m -> m.hasTag("Accepted") && m.hasTag("FRET")}\
+	.filter{ m -> m.getPosition("Donor_Bleach").getPosition() > m.getPosition("Acceptor_Bleach").getPosition()}\
+	.filter{ m -> m.getPosition("Donor_Bleach").getPosition() - m.getPosition("Acceptor_Bleach").getPosition() > 25}.count())
+	double minX = 0
+	double maxX = 5
+	double binWidth = (maxX - minX) / bins
+	double[] yvalues = new double[bins]
+	double[] xvalues = new double[bins]
+
+	for (int bin = 0; bin < bins; bin++) {
+		yvalues[bin] = 0
+		xvalues[bin] = minX + (0.5 + bin) * binWidth
+	}
 
 	//add data to the model
 	archive.molecules().filter{ m -> m.hasTag("Accepted") && m.hasTag("FRET")}\
@@ -259,15 +275,25 @@ def gamma_calculation() {
 		double iDPost = table.mean(demdexName, "T", molecule.getPosition("Acceptor_Bleach").getPosition(), molecule.getPosition("Donor_Bleach").getPosition())
 
 		double gamma = (iAPre - iAPost)/(iDPost - iDPre)
-		if (!Double.isNaN(gamma) && gamma > 0 && gamma < 5) gammas.add(gamma)
+		if (!Double.isNaN(gamma) && gamma > minX && gamma < maxX) {
+			for (int bin = 0; bin < bins; bin++) {
+				if (gamma >= minX + bin * binWidth && gamma < minX + (bin + 1) *
+					binWidth)
+				{
+					yvalues[bin]++
+					break
+				}
+			}
+		}
 		molecule.setParameter("gamma", gamma)
 	}
 
-	MarsTable gammaTable = new MarsTable("temp table")
-	gammaTable.add(gammas)
-	double globalGamma = gammaTable.median("gamma")
+	WeightedObservedPoints obs = new WeightedObservedPoints()
+	for (int bin = 0; bin < bins; bin++)
+		obs.add(xvalues[bin],  yvalues[bin])
 
+	double[] parameters = GaussianCurveFitter.create().fit(obs.toList())
+	double globalGamma = parameters[1]
 	archive.metadata().forEach{metadata -> metadata.setParameter("gamma", globalGamma)}
-
 	return globalGamma
 }
