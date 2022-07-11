@@ -1,16 +1,16 @@
 {
   "window" : {
-    "x" : 287.0,
-    "y" : 226.0,
-    "width" : 1254.0,
-    "height" : 811.0
+    "x" : -2360.0,
+    "y" : 245.0,
+    "width" : 1315.0,
+    "height" : 737.0
   },
   "dashboardTab" : {
     "widgets" : [ ]
   },
   "metadataTab" : {
     "searchField" : "",
-    "marsMetadataSelectionUID" : "fSZBykr2ut",
+    "marsMetadataSelectionUID" : "357VtaYBKP",
     "centerPane" : {
       "marsMetadataDashboard" : {
         "widgets" : [ ]
@@ -18,11 +18,11 @@
     }
   },
   "moleculesTab" : {
-    "searchField" : "",
-    "moleculeSelectionUID" : "26sE5vtK9rEWTJNoSaRSYU",
+    "searchField" : "AO, Accepted",
+    "moleculeSelectionUID" : "xdH5REkSLw3r65R4vwBW4i",
     "centerPane" : {
       "plotPane" : {
-        "numberSubPlots" : 1,
+        "numberSubPlots" : 2,
         "subPlots" : [ {
           "xAxisName" : "T",
           "yAxisName" : "0_Red_Profile_Corrected",
@@ -56,6 +56,33 @@
             "yColumn" : "1_Red",
             "style" : " ",
             "color" : "0x9e9e9eff",
+            "stroke" : "1.0",
+            "showSegments" : false,
+            "segmentsColor" : "0xff0000ff",
+            "segmentsStroke" : "1.0"
+          } ]
+        }, {
+          "xAxisName" : "T",
+          "yAxisName" : "SUM_Dex",
+          "indicators" : "Molecules",
+          "plotSeries" : [ {
+            "track" : true,
+            "type" : "Line",
+            "xColumn" : "T",
+            "yColumn" : "SUM_Dex",
+            "style" : " ",
+            "color" : "0x000000ff",
+            "stroke" : "1.0",
+            "showSegments" : false,
+            "segmentsColor" : "0xff0000ff",
+            "segmentsStroke" : "1.0"
+          }, {
+            "track" : false,
+            "type" : "Line",
+            "xColumn" : "T",
+            "yColumn" : "SUM_signal",
+            "style" : " ",
+            "color" : "0x673ab7ff",
             "stroke" : "1.0",
             "showSegments" : false,
             "segmentsColor" : "0xff0000ff",
