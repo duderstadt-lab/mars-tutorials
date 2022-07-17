@@ -26,15 +26,19 @@
  ******************************************************************************/
 //written by: Nadia M. Huisjes, MSc. & Karl E. Duderstadt
 
-//This script accompanies the 'FRET dataset analysis using Mars' example pipeline as described on the mars docs.
-//https://duderstadt-lab.github.io/mars-docs/examples/FRET
+//This script was written for archives in normal memory.
+//Changes are required to support virtual archives.
 
+//This script accompanies the 'FRET dataset analysis using Mars' example workflows as described on the mars docs:
+//https://duderstadt-lab.github.io/mars-docs/examples/Static_FRET and
+//https://duderstadt-lab.github.io/mars-docs/examples/Dynamic_FRET
+
+#@ MoleculeArchive archive
 #@ String (label="Aem|Aex (format: channel_region)", value="637_Red_Profile_Corrected") aemaexName
 #@ String (label="Aem|Dex (format: channel_region)", value="532_Red") aemdexName
 #@ String (label="Dem|Dex (format: channel_region)", value="532_Green") demdexName
 #@ String (label="Gamma model", choices={"static molecules", "dynamic molecules"}, value="dynamic molecules", style="radioButtonVertical") gammaModel
 #@ Double (label="Dynamic efficiency threshold", value = 0.4) gammaEfficiencyThreshold
-#@ MoleculeArchive archive
 #@ UIService uiService
 
 headless = (archive.getWindow() == null) ? true : false
@@ -48,6 +52,7 @@ import groovy.lang.*
 import de.mpg.biochem.mars.kcp.commands.*
 import org.scijava.ui.DialogPrompt
 import org.apache.commons.math3.stat.regression.SimpleRegression
+import org.apache.commons.math3.stat.correlation.PearsonsCorrelation
 
 //Check that the tables of all molecule records have the columns specified
 boolean foundBadRecord = false
@@ -174,8 +179,12 @@ archive.parallelMolecules().forEach{molecule ->
     }
 }
 
-//Calculating SUM_Dex (FAD+FDD) and SUM_signal (FAA+FAD+FDD)
-if (!headless) archive.getWindow().logln("Calculating SUM_Dex (FAD+FDD) and SUM_signal (FAA+FAD+FDD)")
+//6.F Calculation of the fully corrected S and E values
+if (!headless) archive.getWindow().logln("Calculating fully corrected E and S.")
+Calc_E_S("E", "S", "FAD", "FDD", "FAA")
+
+//Calculating SUM_Dex (FAD+FDD) and SUM_signal (FAA+FAD+FDD) and validation parameters
+if (!headless) archive.getWindow().logln("Calculating SUM_Dex (FAD+FDD), SUM_signal (FAA+FAD+FDD) and validation parameters")
 archive.parallelMolecules().forEach{molecule ->
 	MarsTable table = molecule.getTable()
 	for (int row=0; row < table.getRowCount(); row++) {
@@ -185,12 +194,67 @@ archive.parallelMolecules().forEach{molecule ->
 		table.setValue("SUM_Dex",row, FAD+FDD)
 		table.setValue("SUM_signal",row, FAA+FAD+FDD)
 	}
+
+	double lastT = table.getValue("T", table.getRowCount()-1)
+	if (molecule.hasTag("FRET")) {
+		double acceptorBleachT = molecule.getPosition("Acceptor_Bleach").getPosition()
+		double donorBleachT = molecule.getPosition("Donor_Bleach").getPosition()
+		double fretEndT = getTendFRET(molecule)
+		double lastBleachT = getLastBleachT(molecule)
+
+		double mean_SUM_Dex_FRET = table.mean("SUM_Dex", "T", 0, fretEndT)
+		molecule.setParameter("SUM_Dex_FRET_Coefficient_of_Variation", table.std("SUM_Dex", "T", 0, fretEndT)/mean_SUM_Dex_FRET)
+
+		if (acceptorBleachT < donorBleachT) {
+			double mean_FDD_Donor_Recovery = table.mean("FDD", "T", acceptorBleachT, donorBleachT)
+			molecule.setParameter("FDD_Donor_Recovery_Coefficient_of_Variation", table.std("FDD", "T", acceptorBleachT, donorBleachT)/mean_FDD_Donor_Recovery)
+		}
+
+		//Add E and S between bleaching events
+		double mol_E = 0
+  		double mol_S = 0
+		int mol_obs = 0
+  		for (int t=fretEndT; t <= lastBleachT; t++) {
+    		double Iaemaex_val = table.getValue("FAA",t)
+    		double Iaemdex_val = table.getValue("FAD",t)
+    		double Idemdex_val = table.getValue("FDD",t)
+  			double S = (Iaemdex_val + Idemdex_val) / (Iaemdex_val + Idemdex_val + Iaemaex_val)
+    		double E = Iaemdex_val / (Iaemdex_val + Idemdex_val)
+    		if (!Double.isNaN(S) && !Double.isNaN(E)) {
+	    		mol_E += E
+	    		mol_S += S
+				mol_obs++
+    		}
+  		}
+  		molecule.setParameter("S_Between_Bleaches", mol_S / mol_obs)
+		molecule.setParameter("E_Between_Bleaches", mol_E / mol_obs)
+
+		double mean_SUM_signal_FRET = table.mean("SUM_signal", "T", 0, fretEndT)
+		molecule.setParameter("SUM_signal_FRET_Coefficient_of_Variation", table.std("SUM_signal", "T", 0, fretEndT)/mean_SUM_signal_FRET)
+
+		double[] fret_FDD = table.getColumnAsDoublesNoNaNs("FDD", "T", 0, fretEndT)
+		double[] fret_FAD = table.getColumnAsDoublesNoNaNs("FAD", "T", 0, fretEndT)
+		try {
+			molecule.setParameter("FRET_Pearsons_Correlation", new PearsonsCorrelation().correlation(fret_FDD, fret_FAD))
+		} catch(Exception e) {
+			molecule.setParameter("FRET_Pearsons_Correlation", Double.NaN)
+		}
+	}
+
+	if (molecule.hasTag("DO")) {
+		double donorBleachT = molecule.getPosition("Donor_Bleach").getPosition()
+		double mean_FDD = table.mean("FDD", "T", 0, donorBleachT)
+		molecule.setParameter("FDD_Coefficient_of_Variation", table.std("FDD", "T", 0, donorBleachT)/mean_FDD)
+	}
+
+	if (molecule.hasTag("FRET") || molecule.hasTag("AO")) {
+		double acceptorBleachT = molecule.getPosition("Acceptor_Bleach").getPosition()
+		double mean_FAA = table.mean("FAA", "T", 0, acceptorBleachT)
+		molecule.setParameter("FAA_Coefficient_of_Variation", table.std("FAA", "T", 0, acceptorBleachT)/mean_FAA)
+	}
 }
 
-//6.F Calculation of the fully corrected S and E values
-if (!headless) archive.getWindow().logln("Calculating fully corrected E and S. Building final log.")
-Calc_E_S("E", "S", "FAD", "FDD", "FAA")
-
+if (!headless) archive.getWindow().logln("Building final log.")
 log += builder.buildParameterList()
 log += "\n" + LogBuilder.endBlock(true) + "\n"
 archive.logln(log)
@@ -206,6 +270,17 @@ def getTendFRET(def molecule) {
 		acceptorBleachT = molecule.getPosition("Acceptor_Bleach").getPosition()
 
 	return (donorBleachT <= acceptorBleachT) ? donorBleachT : acceptorBleachT
+}
+
+def getLastBleachT(def molecule) {
+	double donorBleachT = 0
+	double acceptorBleachT = 0
+	if (molecule.hasPosition("Donor_Bleach"))
+		donorBleachT = molecule.getPosition("Donor_Bleach").getPosition()
+	if (molecule.hasPosition("Acceptor_Bleach"))
+		acceptorBleachT = molecule.getPosition("Acceptor_Bleach").getPosition()
+
+	return (donorBleachT >= acceptorBleachT) ? donorBleachT : acceptorBleachT
 }
 
 def Calc_E_S(String E_name, String S_name, String Iaemdex, String Idemdex, String Iaemaex) {

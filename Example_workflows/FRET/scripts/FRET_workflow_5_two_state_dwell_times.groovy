@@ -26,13 +26,17 @@
  ******************************************************************************/
 //written by: Karl E. Duderstadt
 
-//This script accompanies the 'FRET dataset analysis using Mars' example pipeline as described on the mars docs.
-//https://duderstadt-lab.github.io/mars-docs/examples/FRET_dynamic
+//This script was written for archives in normal memory.
+//Changes are required to support virtual archives.
 
+//This script accompanies the 'FRET dataset analysis using Mars' example workflows as described on the mars docs:
+//https://duderstadt-lab.github.io/mars-docs/examples/Dynamic_FRET and
+//https://duderstadt-lab.github.io/mars-docs/examples/No_aex_FRET/
+
+#@ MoleculeArchive archive
 #@ String (label="Efficiency (E)", value="E") efficiencyColumn
 #@ String (label="Time (s)", value="532_Green_Time_(s)") timeColumn
 #@ Double (label="Efficiency threshold (e.g. 0.5)", value = 0.4) threshold
-#@ MoleculeArchive archive
 #@ UIService uiService
 
 import de.mpg.biochem.mars.table.*

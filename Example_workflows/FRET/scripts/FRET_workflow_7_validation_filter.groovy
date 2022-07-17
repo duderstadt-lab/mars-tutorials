@@ -35,20 +35,38 @@
 //https://duderstadt-lab.github.io/mars-docs/examples/No_aex_FRET/
 
 #@ MoleculeArchive archive
+#@ Double (label="SUM_Dex_FRET_Coefficient_of_Variation < ", style="slider", min=0, max=1, stepSize=0.01, value=0.4) SUM_Dex_FRET_Coefficient_of_Variation
+#@ Double (label="SUM_signal_FRET_Coefficient_of_Variation < ", style="slider", min=0, max=1, stepSize=0.01, value=0.3) SUM_signal_FRET_Coefficient_of_Variation
+#@ Double (label="FRET_Pearsons_Correlation < ", style="slider", min=-1, max=1, stepSize=0.01, value=-0.3) FRET_Pearsons_Correlation
+#@ String (label="Tagging mode:", choices={"Tag valid molecules with Accepted", "Remove Accepted tag from invalid molecules"}, style="radioButtonVertical") tagMode
 
 import de.mpg.biochem.mars.util.*
 
 //Build log message
 builder = new LogBuilder()
-String log = LogBuilder.buildTitleBlock("FRET workflow 1 add molecule tags")
+String log = LogBuilder.buildTitleBlock("FRET workflow 7 validation filter")
 builder.addParameter("Workflow version", "0.1")
+builder.addParameter("SUM_Dex_FRET_Coefficient_of_Variation < ", SUM_Dex_FRET_Coefficient_of_Variation)
+builder.addParameter("SUM_signal_FRET_Coefficient_of_Variation < ", SUM_signal_FRET_Coefficient_of_Variation)
+builder.addParameter("FRET_Pearsons_Correlation < ", FRET_Pearsons_Correlation)
 log += builder.buildParameterList()
 archive.logln(log)
 
 archive.molecules().forEach{ molecule ->
-	archive.getMetadata(molecule.getMetadataUID()).getTags().forEach{ tag ->
-		molecule.addTag(tag)
-	}
+	boolean valid = true
+	if (molecule.hasParameter("SUM_Dex_FRET_Coefficient_of_Variation") && molecule.getParameter("SUM_Dex_FRET_Coefficient_of_Variation") > SUM_Dex_FRET_Coefficient_of_Variation)
+		valid = false
+
+	if (molecule.hasParameter("SUM_signal_FRET_Coefficient_of_Variation") && molecule.getParameter("SUM_signal_FRET_Coefficient_of_Variation") > SUM_signal_FRET_Coefficient_of_Variation)
+		valid = false
+
+	if (molecule.hasParameter("FRET_Pearsons_Correlation") && molecule.getParameter("FRET_Pearsons_Correlation") > FRET_Pearsons_Correlation)
+		valid = false
+
+	if (tagMode.equals("Tag valid molecules with Accepted") && valid)
+		molecule.addTag("Accepted")
+	else if (tagMode.equals("Remove Accepted tag from invalid molecules") && !valid)
+		molecule.removeTag("Accepted")
 }
 
 archive.logln(LogBuilder.endBlock(true))

@@ -26,12 +26,17 @@
  ******************************************************************************/
 //written by: Karl E. Duderstadt
 
-//This script accompanies the 'FRET dataset analysis using Mars' example pipeline as described on the mars docs.
-//https://duderstadt-lab.github.io/mars-docs/examples/FRET
+//This script was written for archives in normal memory.
+//Changes are required to support virtual archives.
 
+//This script accompanies the 'FRET dataset analysis using Mars' example workflows as described on the mars docs:
+//https://duderstadt-lab.github.io/mars-docs/examples/Static_FRET and
+//https://duderstadt-lab.github.io/mars-docs/examples/Dynamic_FRET and
+//https://duderstadt-lab.github.io/mars-docs/examples/No_aex_FRET/
+
+#@ MoleculeArchive archive
 #@ String (label="Acceptor column (format: channel_region)", value="637_Red") acceptorColumn
 #@ String (label="Donor column (format: channel_region)", value="532_Green") donorColumn
-#@ MoleculeArchive archive
 #@ ImageJ ij
 #@ UIService uiService
 

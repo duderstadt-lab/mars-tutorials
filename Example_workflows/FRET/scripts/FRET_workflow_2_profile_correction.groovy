@@ -26,14 +26,19 @@
  ******************************************************************************/
 //written by: Karl E. Duderstadt
 
-//This script accompanies the 'FRET dataset analysis using Mars' example pipeline as described on the mars docs.
-//https://duderstadt-lab.github.io/mars-docs/examples/FRET
+//This script was written for archives in normal memory.
+//Changes are required to support virtual archives.
 
+//This script accompanies the 'FRET dataset analysis using Mars' example workflows as described on the mars docs:
+//https://duderstadt-lab.github.io/mars-docs/examples/Static_FRET and
+//https://duderstadt-lab.github.io/mars-docs/examples/Dynamic_FRET and
+//https://duderstadt-lab.github.io/mars-docs/examples/No_aex_FRET/
+
+#@ MoleculeArchive archive
 #@ String (label="Aem|Aex (format: channel_region)", value="637_Red") aemaex
 #@ String (label="Dem|Dex (format: channel_region)", value="532_Green") demdex
 #@ ImgPlus (label="Acceptor excitation profile") acceptor_excitation_profile
 #@ ImgPlus (label="Donor excitation profile") donor_excitation_profile
-#@ MoleculeArchive archive
 #@ OpService opService
 #@ UIService uiService
 
