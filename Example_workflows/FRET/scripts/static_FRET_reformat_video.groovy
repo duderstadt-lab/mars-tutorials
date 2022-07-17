@@ -26,8 +26,8 @@
  ******************************************************************************/
 //written by: Karl E. Duderstadt
 
-//This script accompanies the 'FRET dataset analysis using Mars' example pipeline as described on the mars docs.
-//https://duderstadt-lab.github.io/mars-docs/examples/FRET
+//This script accompanies the 'FRET dataset analysis using Mars' example workflows as described on the mars docs:
+//https://duderstadt-lab.github.io/mars-docs/examples/Static_FRET
 
 #@ DatasetService datasetService
 #@ Dataset dataset
