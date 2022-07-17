@@ -50,6 +50,7 @@ import org.scijava.ui.DialogPrompt
 import org.apache.commons.math3.stat.regression.SimpleRegression
 import org.apache.commons.math3.fitting.GaussianCurveFitter
 import org.apache.commons.math3.fitting.WeightedObservedPoints
+import org.apache.commons.math3.stat.correlation.PearsonsCorrelation
 
 //Check that the tables of all molecule records have the columns specified
 boolean foundBadRecord = false
