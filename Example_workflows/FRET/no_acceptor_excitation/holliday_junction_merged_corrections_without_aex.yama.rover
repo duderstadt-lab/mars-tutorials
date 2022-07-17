@@ -1,7 +1,7 @@
 {
   "window" : {
-    "x" : 212.0,
-    "y" : 151.0,
+    "x" : -2495.0,
+    "y" : 192.0,
     "width" : 953.0,
     "height" : 587.0
   },
@@ -37,7 +37,7 @@
           "yAxisName" : "Intensity",
           "indicators" : "Molecules",
           "plotSeries" : [ {
-            "track" : false,
+            "track" : true,
             "type" : "Line",
             "xColumn" : "T",
             "yColumn" : "532_Green",

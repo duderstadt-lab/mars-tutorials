@@ -1,12 +1,18 @@
 {
   "window" : {
-    "x" : -2360.0,
-    "y" : 245.0,
-    "width" : 1315.0,
-    "height" : 737.0
+    "x" : -2495.0,
+    "y" : 181.0,
+    "width" : 948.0,
+    "height" : 634.0
   },
   "dashboardTab" : {
-    "widgets" : [ ]
+    "widgets" : [ {
+      "name" : "ArchivePropertiesWidget",
+      "settings" : {
+        "Width" : 270.0,
+        "Height" : 270.0
+      }
+    } ]
   },
   "metadataTab" : {
     "searchField" : "",
@@ -18,8 +24,8 @@
     }
   },
   "moleculesTab" : {
-    "searchField" : "AO, Accepted",
-    "moleculeSelectionUID" : "xdH5REkSLw3r65R4vwBW4i",
+    "searchField" : "FRET, Accepted",
+    "moleculeSelectionUID" : "oTVWDiz232aRBYcbyDCVtk",
     "centerPane" : {
       "plotPane" : {
         "numberSubPlots" : 2,
