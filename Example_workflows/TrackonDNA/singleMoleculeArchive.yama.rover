@@ -1,20 +1,14 @@
 {
   "window" : {
-    "x" : 508,
-    "y" : 456,
-    "width" : 1329,
-    "height" : 854
+    "x" : 320.0,
+    "y" : 100.0,
+    "width" : 800.0,
+    "height" : 600.0
   },
-  "DashboardTab" : {
-    "widgets" : [ {
-      "name" : "ArchivePropertiesWidget",
-      "settings" : {
-        "Width" : 270.0,
-        "Height" : 270.0
-      }
-    } ]
+  "dashboardTab" : {
+    "widgets" : [ ]
   },
-  "MetadataTab" : {
+  "metadataTab" : {
     "searchField" : "",
     "marsMetadataSelectionUID" : "uq27zkeShK",
     "centerPane" : {
@@ -23,9 +17,9 @@
       }
     }
   },
-  "MoleculesTab" : {
+  "moleculesTab" : {
     "searchField" : "",
-    "moleculeSelectionUID" : "rDD8RRL1h7hozCXDUDzKRt",
+    "moleculeSelectionUID" : "21sJ4qwTmi2aM3HfMkrmTm",
     "centerPane" : {
       "plotPane" : {
         "numberSubPlots" : 1,
@@ -36,6 +30,6 @@
       }
     }
   },
-  "CommentsTab" : { },
-  "SettingsTab" : { }
+  "commentsTab" : { },
+  "settingsTab" : { }
 }
